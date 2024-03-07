@@ -25,7 +25,7 @@ plot(flowers, insects)
 #symbols shape
 plot(flowers, insects, pch=19)
 
-#symbol dimension. 
+#symbol dimension
 plot(flowers, insects, pch=19, cex=2) #con cex=2 avrò i simboli che saranno il doppio di quelli originali. se vuoi ridurne le dimensioni utilizza cex=.5 (che è uguale a 0.5)
 
 #color
