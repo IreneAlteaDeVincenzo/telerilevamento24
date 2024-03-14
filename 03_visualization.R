@@ -9,11 +9,10 @@ im.list() #tutte le immagini in imagery cominciamo con im.
 # Importa dati da imagery
 b2<- im.import("sentinel.dolomites.b2.tif") # in questo modo andiamo ad importare l'immagine raster associata 
 
-# Plot dati
-plot(b2)
-
 #A questo punto, possiamo andare a cambiare la scala di colori. Per farlo, usiamo la funzione "colorRampPalette". scegli la scala di colori e concatenali con la funzione "c"
 clg<-colorRampPalette(c("black", "grey", "light grey"))(3) # funzione "c(x)" serve a concatenare tutti i colori insieme. Aggiungiamo "(3)" per dire in lunero di sfumature da usare, ma meglio usarne anche (100)
+
+#Plottiamo i dati 
 plot(b2, col=clg)
 
 #Proviamo di nuovo, usando un'altra scala di colori 
