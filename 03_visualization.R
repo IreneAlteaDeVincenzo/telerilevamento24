@@ -1,19 +1,21 @@
 # Visualizzare immagini da satellite tramite imageRy su R
 
+#Prima di tutto devo caricare i pacchetti per usare imageRy
 library(terra)
-library(imageRy) #carichiamo i dati
+library(imageRy) #A questo punto posso usare ed accedere alle funzioni e ai dati dentro imageRy
 
-# List of data avialable in imageRy
-im.list() #tutte le immagini in imagery cominciamo con im. 
+# Per conoscere i dati presenti nel pacchetto, possiamo usare la funzione:
+im.list() #NB:tutte le funzioni in imagery cominciamo con "im."Nel pacchetto è presente un manuale con la lista di funzioni.
 
 # Importa dati da imagery
 b2<- im.import("sentinel.dolomites.b2.tif") # in questo modo andiamo ad importare l'immagine raster associata 
 
-#A questo punto, possiamo andare a cambiare la scala di colori. Per farlo, usiamo la funzione "colorRampPalette". scegli la scala di colori e concatenali con la funzione "c"
-clg<-colorRampPalette(c("black", "grey", "light grey"))(3) # funzione "c(x)" serve a concatenare tutti i colori insieme. Aggiungiamo "(3)" per dire in lunero di sfumature da usare, ma meglio usarne anche (100)
+#Qual'ora i colori dell'immagine non ci piacciano, possiamo scegliere e cambiare scala di colori per fare il plot immagine. 
+#Per farlo, usiamo la funzione "colorRampPalette". Scegli la scala di colori e concatenali con la funzione "c()", che serve a costruire un vettore.
+clg<-colorRampPalette(c("black", "grey", "light grey"))(3) #funzione "c()" serve a concatenare tutti i colori insieme. Aggiungiamo "(3)" per dire in numero di sfumature da usare, ma meglio usarne(100)
 
 #Plottiamo i dati 
-plot(b2, col=clg)
+plot(b2, col=clg) #funzione plot(oggetto, col=palette colori)
 
 #Proviamo di nuovo, usando un'altra scala di colori 
 clcyan<-colorRampPalette(c("magenta", "cyan4", "cyan"))(100)
@@ -32,27 +34,26 @@ plot(b4, col=clcyan)
 b8<- im.import("sentinel.dolomites.b8.tif") # in questo modo andiamo ad importare l'immagine raster associata 
 plot(b8,col=clcyan)
 
-#multiframe, ci permette di combinare le immagini, visualizzandole tutte insieme per un eventuale confronto
+#Multiframe, ci permette di combinare le immagini, visualizzandole tutte insieme per un eventuale confronto
 par(mfrow=c(2,2)) #Stiamo sostanzialmente costruendo una matrice 2x2, con le 4 immagini da noi caricate, andando a combinare righe e colonne
 plot(b2, col=clcyan)
 plot(b3, col=clcyan)
 plot(b4, col=clcyan)
 plot(b8,col=clcyan) # in questo modo andremo a caricare le 4 immagini
 
-#Volendo, posso cambiare la visualizzazione della matrice di immagini. Ad esempio, per visualizzarle in fila basta fare un vettore x=(1,4)
+#Volendo, posso cambiare la visualizzazione della matrice di immagini. Ad esempio, per visualizzarle in fila basta fare un vettore x=(1,4) --> vettore costituito da 1 riga, 4 colonne
 par(mfrow=c(1,4)) 
 plot(b2, col=clcyan)
 plot(b3, col=clcyan)
 plot(b4, col=clcyan)
 plot(b8,col=clcyan) 
 
-#è possibile anche andare a combinare le 4 bande insieme, così da ottenere un'immagine satellitare completa, sovrapponendole.
-#Per farlo, uso la funzione di "stack(x), ottenendo una simngola immagine satellitare
+#Posso costruire un vettore con le 4 immagini che abbiamo creato, plottandole
 stacksent<-c(b2, b3, b4, b8)
 plot(stacksent, col=clcyan)
 
-#Se voglio valorare poi su un singolo elemento dello stack, ad esemplio l'elemento 4 (b8), posso usare le parentesi quadrate [x
+#Se voglio lavorare poi su un singolo elemento dello stack, ad esemplio l'elemento 4 (b8), posso usare le parentesi quadrate [x]
 plot(stacksent[[4]], col=clcyan)
 
 
-#usa dev.off(x) se vluoi cancellare il plot precedente
+#usa dev.off() se vuoi cancellare il plot precedente
