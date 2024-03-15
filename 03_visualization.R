@@ -21,6 +21,10 @@ plot(b2, col=clg) #funzione plot(oggetto, col=palette colori)
 clcyan<-colorRampPalette(c("magenta", "cyan4", "cyan"))(100)
 plot(b2, col=clcyan)
 
+#SONO PIGRA. Volendo, posso usare palette predefinite. Devo richiamare il pacchetto "viridis" e poi posso scegliere tra 4 diverse palette prefedinite: "viridis" “magma”, “plasma”, and “inferno
+library("viridis")
+plot(b2, col=magma(100))
+
 #Importa anche bande aggiuntive. 
 #IMPORTO BANDA VERDE
 b3<- im.import("sentinel.dolomites.b3.tif") # in questo modo andiamo ad importare l'immagine raster associata 
@@ -57,3 +61,5 @@ plot(stacksent[[4]], col=clcyan)
 
 
 #usa dev.off() se vuoi cancellare il plot precedente
+
+
