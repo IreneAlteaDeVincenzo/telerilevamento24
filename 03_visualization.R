@@ -68,6 +68,6 @@ plot(stacksent[[4]], col=clcyan) #per richimare un solo elemente di un vettore, 
 # L'elemento [[3]] dello stack corrisponde alla banda del Red=b4
 # L'elemento [[4]] dello stack corrisponde alla banda del infrarosso=b8
 par(mfrow=c(1,2)) #in questo modo faccio un multiframe
-im.plotRGB(stacksent 3, 2, 1) #cosa significano i numeri? scrivendo "3" dico al programma di associare R=al terzo elemento. Scrivendo "2" associo G=al secondo elemento del vettore etc..
-im.plotRGB(stacksent 4, 2, 1) 
+im.plotRGB(stacksent, 3, 2, 1) #cosa significano i numeri? scrivendo "3" dico al programma di associare R=al terzo elemento. Scrivendo "2" associo G=al secondo elemento del vettore etc..
+im.plotRGB(stacksent, 4, 2, 1) 
 
