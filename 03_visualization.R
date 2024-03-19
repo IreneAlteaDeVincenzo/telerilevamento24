@@ -62,4 +62,12 @@ plot(stacksent[[4]], col=clcyan) #per richimare un solo elemente di un vettore, 
 
 #usa dev.off() se vuoi cancellare il plot precedente
 
+#RGB PLOT
+# L'elemento [[1]] dello stack corrisponde alla banda del Blue=b2
+# L'elemento [[2]] dello stack corrisponde alla banda del Green=b3
+# L'elemento [[3]] dello stack corrisponde alla banda del Red=b4
+# L'elemento [[4]] dello stack corrisponde alla banda del infrarosso=b8
+par(mfrow=c(1,2)) #in questo modo faccio un multiframe
+im.plotRGB(stacksent 3, 2, 1) #cosa significano i numeri? scrivendo "3" dico al programma di associare R=al terzo elemento. Scrivendo "2" associo G=al secondo elemento del vettore etc..
+im.plotRGB(stacksent 4, 2, 1) 
 
