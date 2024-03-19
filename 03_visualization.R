@@ -21,7 +21,7 @@ plot(b2, col=clg) #funzione plot(oggetto, col=palette colori)
 clcyan<-colorRampPalette(c("magenta", "cyan4", "cyan"))(100)
 plot(b2, col=clcyan)
 
-#SONO PIGRA. Volendo, posso usare palette predefinite. Devo richiamare il pacchetto "viridis" e poi posso scegliere tra 4 diverse palette prefedinite: "viridis" “magma”, “plasma”, and “inferno
+#SONO PIGRA. Volendo, posso usare palette predefinite. Devo richiamare il pacchetto "viridis" e poi posso scegliere tra 4 diverse palette prefedinite: "viridis" “magma”, “plasma”, and “inferno"
 library("viridis")
 plot(b2, col=magma(100))
 
@@ -57,7 +57,7 @@ stacksent<-c(b2, b3, b4, b8)
 plot(stacksent, col=clcyan)
 
 #Se voglio lavorare poi su un singolo elemento dello stack, ad esemplio l'elemento 4 (b8), posso usare le parentesi quadrate [x]
-plot(stacksent[[4]], col=clcyan)
+plot(stacksent[[4]], col=clcyan) #per richimare un solo elemente di un vettore, uso una []. tuttavia, visto che siamo in una matrice, ne devo usare due
 
 
 #usa dev.off() se vuoi cancellare il plot precedente
