@@ -67,7 +67,14 @@ plot(stacksent[[4]], col=clcyan) #per richimare un solo elemente di un vettore, 
 # L'elemento [[2]] dello stack corrisponde alla banda del Green=b3
 # L'elemento [[3]] dello stack corrisponde alla banda del Red=b4
 # L'elemento [[4]] dello stack corrisponde alla banda del infrarosso=b8
-par(mfrow=c(1,2)) #in questo modo faccio un multiframe
+par(mfrow=c(2,2)) #in questo modo faccio un plot multiframe
 im.plotRGB(stacksent, 3, 2, 1) #cosa significano i numeri? scrivendo "3" dico al programma di associare R=al terzo elemento. Scrivendo "2" associo G=al secondo elemento del vettore etc..
-im.plotRGB(stacksent, 4, 2, 1) 
+im.plotRGB(stacksent, 4, 2, 1) # in questo caso col numero 4 richiamo la banda infrarosso nella banda del Rosso
+im.plotRGB(stacksent, 3, 4, 2) # metto l'infrerosso nella banda del Green
+im.plotRGB(stacksent, 3, 2, 4) # mettendo l'infrarosso nella banda del Blu, vado a evidenziare il suolo nudo
+
+#Funzione che produce grafici di confronto
+pairs(stacksent) 
+b2 #ti restituisce tutte le informazioni del raster associato
+
 
