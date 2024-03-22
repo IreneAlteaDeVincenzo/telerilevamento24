@@ -73,8 +73,12 @@ im.plotRGB(stacksent, 4, 2, 1) # in questo caso col numero 4 richiamo la banda i
 im.plotRGB(stacksent, 3, 4, 2) # metto l'infrerosso nella banda del Green
 im.plotRGB(stacksent, 3, 2, 4) # mettendo l'infrarosso nella banda del Blu, vado a evidenziare il suolo nudo
 
+#Per avere informazioni su ul'immabine raster, basta plottarla e poi richiamarla.
+# b2<-im.import("sentinel.dolomites.b82.tif")
+#b2 --> uscità una lista con tutta una serie di valori.
+
 #Funzione PAIR() -->  va a studiare il potenziale di correlazione tra variabili diverse, calcolando nel contempo l'indice di correlazione di Pearson. 
 pairs(stacksent) 
-b2 #ti restituisce tutte le informazioni del raster associato
+
 
 
