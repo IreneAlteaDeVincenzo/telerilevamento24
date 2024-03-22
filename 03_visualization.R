@@ -73,7 +73,7 @@ im.plotRGB(stacksent, 4, 2, 1) # in questo caso col numero 4 richiamo la banda i
 im.plotRGB(stacksent, 3, 4, 2) # metto l'infrerosso nella banda del Green
 im.plotRGB(stacksent, 3, 2, 4) # mettendo l'infrarosso nella banda del Blu, vado a evidenziare il suolo nudo
 
-#Funzione che produce grafici di confronto
+#Funzione PAIR() -->  va a studiare il potenziale di correlazione tra variabili diverse, calcolando nel contempo l'indice di correlazione di Pearson. 
 pairs(stacksent) 
 b2 #ti restituisce tutte le informazioni del raster associato
 
