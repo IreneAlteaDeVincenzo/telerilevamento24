@@ -22,3 +22,42 @@ dif = EN01[[1]] - EN13[[1]]
 plot(dif)
 # oppure richiamando library(viridis) --> plot(dif, col=viridis(100))
 
+
+# SCIOGLIMENTO GHIACCI IN GROENLANDIA
+
+im.list()
+
+g2000 <- im.import("greenland.2000.tif")
+g2005 <- im.import("greenland.2005.tif")
+g2010 <- im.import("greenland.2010.tif")
+g2015 <- im.import("greenland.2015.tif")
+
+#Plotto immagini con funzione par, usando una scala definita da noi
+clg <- colorRampPalette(c("blue", "white", "red")) (100) #il blu è la porzione più fredda
+par(mfrow=c(2,2))
+plot(g2000, col=clg)
+plot(g2005, col=clg)
+plot(g2010, col=clg)
+plot(g2015, col=clg)
+
+#oppure posso plottare le immagini usando viridis 
+# par(mfrow=c(2,2))
+# plot(g2000, col=viridis(100))
+# plot(g2005, col=viridis(100))
+# plot(g2010, col=viridis(100))
+# plot(g2015, col=viridis(100))
+
+#Faccio la differenza tra 2 immagini
+diff00_15=g2000[[1]]-g2015[[1]]
+plot(diff00_15)
+
+#Oltre a fare par, posso plottare le immagini anche facendo uno stacking dei dati
+stack<-c(g2000,g2005,g2010,g2015)
+plot(stack, col=clg)
+
+#Faccio la differenza tra 2 immagini a partire direttamente dallo stacking
+difg <- stack[[1]] - stack[[4]]
+plot(difg, col=clg) #il blu è dove la temperatura è diminuita, il rosso dove è aumentata
+
+#Volendo, posso fare anche un plot RGB plotttando l'annno g2000 su red, g2005 sul verde, g2015 sul blu
+#im.plotRGB(stack, r=1, g=2, b=4) #in questo modo, dove abbiamo più blu ad esempio vul dire che prevale l'immagine 2015
