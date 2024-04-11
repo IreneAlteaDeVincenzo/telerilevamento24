@@ -60,4 +60,4 @@ difg <- stack[[1]] - stack[[4]]
 plot(difg, col=clg) #il blu è dove la temperatura è diminuita, il rosso dove è aumentata
 
 #Volendo, posso fare anche un plot RGB plotttando l'annno g2000 su red, g2005 sul verde, g2015 sul blu
-#im.plotRGB(stack, r=1, g=2, b=4) #in questo modo, dove abbiamo più blu ad esempio vul dire che prevale l'immagine 2015
+#im.plotRGB(stack, r=1, g=2, b=4) #in questo modo, dove abbiamo più blu ad esempio vuol dire che nel 2015 la temperatura era più alta in quelle zone
