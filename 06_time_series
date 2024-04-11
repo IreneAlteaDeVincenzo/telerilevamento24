@@ -1,0 +1,24 @@
+#Secondo metodo per quantificare i cambiamenti nel tempo 
+
+library(terra)
+lybrary(imagerY)
+
+im.list()
+
+#importa dati
+EN01 <- im.import("EN_01.png") #Iimmagine azoto europa a gennaio
+EN13 <- im.import("EN_13.png") #immagine atodo europa marzo
+
+#plot dati 
+par(mfrow=c(2,1))
+im.plotRGB.auto(EN01)  #funzione RGB per poter plottare automaticamente l'immagine con la 1°, 2° e 3° banda di colore
+im.plotRGB.auto(EN13)
+
+# using the first element (band) of images
+dif = EN01[[1]] - EN13[[1]]
+
+# Per fare la differenza tra le due immagini, andiamo a sottrarre la prima banda delle 2 immagini
+dif = EN01[[1]] - EN13[[1]]
+plot(dif)
+# oppure richiamando library(viridis) --> plot(dif, col=viridis(100))
+
