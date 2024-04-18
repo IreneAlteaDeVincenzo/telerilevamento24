@@ -1,0 +1,23 @@
+# Come importare dati in R da risorse esterne
+
+library(terra)
+
+#Selezioniamo la working directory da cui importare i dati usando la funzione "setwd("x)". Nell'oggetto (x) devi incollare il "percorso immagine"
+setwd("C:/Users/irene/Downloads")
+
+#ora carichiamo su R l'immagine con la funzione rast("x")
+eclissi<-rast("eclissi.png")
+
+#facciamo il plot immagine 
+plotRGB(eclissi, 1, 2, 3)
+
+#Volendo, possiamo fare il plot immagine  in modi diversi
+par(mfrow=c(1,2))
+plotRGB(eclissi, 1, 2, 3)
+im.plotRGB(eclissi, 1, 2, 3) #usiamo ln questo caso la funzione di imageRy, quindi bisogna caricare il pacchetto.
+# Le immagini caricate saranno un po' diverse in funzione dello stretch operato dalla funzione che utilizzi.
+
+#Ora possiano andare a fare tutte le operazioni già viste sulla nostra immagine. Qui sotto, alcuni esempi
+
+#Fare la differenza tra 1° e 2° banda. Quetsa operazione ha senso ad esempio se voglio fare un confrotno multitemporale tra immagini 
+dif=eclissi[[1]]-eclissi[[2]]
