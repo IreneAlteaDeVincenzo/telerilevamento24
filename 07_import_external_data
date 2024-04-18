@@ -19,5 +19,25 @@ im.plotRGB(eclissi, 1, 2, 3) #usiamo ln questo caso la funzione di imageRy, quin
 
 #Ora possiano andare a fare tutte le operazioni già viste sulla nostra immagine. Qui sotto, alcuni esempi
 
-#Fare la differenza tra 1° e 2° banda. Quetsa operazione ha senso ad esempio se voglio fare un confrotno multitemporale tra immagini 
+#Fare la differenza tra 1° e 2° banda. Quetsa operazione ha senso ad esempio se voglio fare un CONFRONTO MULTITEMPORALE TRA IMMAGINI
 dif=eclissi[[1]]-eclissi[[2]]
+
+#PER IMPORTARE IMMAGINI DA COPERNICUS
+#installare pacchetto per importare file da copernicus
+install.packages("ncdf4")
+
+#richiamare pacchetto
+library(ncdf4)
+
+#importa il dato con la funnzione "rast"
+soil<-rast("percorso_immagine.nc")
+
+#plotta il dato
+plot(soil)
+
+#Mi caricherà tutto il globo. potrebbe essere utile fare un "RITAGLIO IMMAGINE"
+Per farlo, creo un vettore dove inserisco la latitudine e longitudine che mi interessa
+ext<-c(25,35,58,62)
+
+#Applico il vettore da me appena creato alla mia immagine
+soilcrop<-crop(soil, ext)
