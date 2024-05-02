@@ -21,3 +21,16 @@ im.plotRGB(stack, r=3, g=4, b=2) # in questo caso plott infrarosso nella banda d
 
 #Cacolare tutte le correlazioni tra le varie bande con la funsione pairs 
 pairs(stack) #R, G, B, hanno in questo caso un buon potenziare di correlazione, la banda dell'infrarosso un po' meno 
+
+#Fare l'analisi multivariata con im.pca()
+pcimage <-im.pca(stack)
+plot(pcimage, col=viridis(100))
+
+#Per conoscere la variabilità esplicata dal primo asse PC1, posso calcolare i valori di standard deviation e fare la somma 
+tot<-sum(1554.35604,  505.76984,   45.39869,   32.62567)
+1554.35604*100/tot #mi uscità un valore, ad esempio 72% che mi dice la variavilità del primo asse
+
+
+
+
+
