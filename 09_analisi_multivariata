@@ -1,0 +1,23 @@
+#COME FARE ANALISI MULTIVARIATA
+
+library(terra)
+library(imageRy)
+library(viridis) 
+
+im.list()
+
+#Importo le immagini delle tofane delle Dolomiti, con le relative 4 bande
+b2 <- im.import("sentinel.dolomites.b2.tif")  #Banda Blu
+b3 <- im.import("sentinel.dolomites.b3.tif")  #Banda Verde
+b4 <- im.import("sentinel.dolomites.b4.tif")  #Banda Rossa
+b8 <- im.import("sentinel.dolomites.b8.tif")  #Banda Infrarosso
+
+#Faccio lo stack tra tutte le 4 bande per comporre l'immagine satellitare
+stack<-c(b2, b3, b4, b8)
+
+#plotto lo stack
+im.plotRGB(stack, r=4, g=3, b=2) 
+im.plotRGB(stack, r=3, g=4, b=2) # in questo caso plott infrarosso nella banda del verse
+
+#Cacolare tutte le correlazioni tra le varie bande con la funsione pairs 
+pairs(stack) #R, G, B, hanno in questo caso un buon potenziare di correlazione, la banda dell'infrarosso un po' meno 
