@@ -56,7 +56,7 @@ plot(b8,col=clcyan) # in questo modo andremo a caricare le 4 immagini
 # par(mfrow = c(4, 1)): Crea una griglia con 4 righe e 1 colonna
 # par(mfrow = c(1, 4)): Crea una griglia con una singola riga e 4 colonne.
 
-#------------------------ STACK ------------------------
+#-------------------------------------- STACK ----------------------------------
 # Posso costruire un vettore con le 4 immagini che abbiamo creato, plottandole insieme così da ottenere una singola immagine satellitare
 stacksent<-c(b2, b3, b4, b8) # Questa riga combina quattro strati raster (b2, b3, b4 e b8) in un unico oggetto
 plot(stacksent, col=clcyan)
@@ -67,13 +67,15 @@ plot(stacksent[[4]], col=clcyan) # "[]" Serve a richimare un solo elemente di un
 
 # Usa dev.off() se vuoi cancellare il plot precedente
 
-#------------------------ RGB PLOT ------------------------
+#------------------------ PLOT STACK RGB ------------------------
+# Plottiamo i vari elementi dello stack sovrapposti, così da ottenere un'unica immagine satellitare (reale/multispettrale).
+# Per farlo, usiamo la funzione "im.plotRGB(oggetto, R, G, B)"
+# Questa funzione serve a creare 1 singola immagine a colori basata su tre strati, che rappresentano i canali Red, GREEN, BLUE. 
+
 # L'elemento [[1]] dello stack corrisponde alla banda del Blue=b2
 # L'elemento [[2]] dello stack corrisponde alla banda del Green=b3
 # L'elemento [[3]] dello stack corrisponde alla banda del Red=b4
 # L'elemento [[4]] dello stack corrisponde alla banda del infrarosso=b8
-
-# Usiamo la funzione "im.plotRGB(oggetto, R, G, B)"
 
 par(mfrow=c(2,2)) # In questo modo faccio un plot multiframe 2x2 
 im.plotRGB(stacksent, 3, 2, 1) # Cosa significano i numeri? Scrivendo "3" in R, dico al programma di associare R al 3°elemento del vettore. Scrivendo "2" in G, associo G al 2°elemento vettore.
