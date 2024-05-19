@@ -1,56 +1,73 @@
-# Calcolare indice vegetazioneqvi
+# Calcolare indici spettrali
+# Ci da una misura della vegetazione presente
 
+### IRENE DEL FUTURO, passa direttamente alla fine dove è riassunto tutto ###
+
+# Carico pacchetti
 library(imageRy)
 library(terra)
 
+# Visualizzo lista dati dentro imageRy
 im.list()
 
+#----------- Importo dati -----------
 m1992 <- im.import("matogrosso_l5_1992219_lrg.jpg")   
-# bands: 1=NIR, 2=RED, 3=GREEN
-im.plotRGB(m1992, 1, 2, 3) #plot con INF su rosso
-im.plotRGB(m1992, r=2, g=1, b=3 #plot con INF su green
-im.plotRGB(m1992, r=2, g=3, b=1) #plot con INF su blu
-
-# Importa immagine mato2006par
 m2006 <- im.import("matogrosso_ast_2006209_lrg.jpg")
-im.plotRGB(m2006, r=2, g=3, b=1)
 
-# build a multiframe with 1992 and 2006 images
+#----------- Plot dati -----------
+
+#BANDE
+# 1= NIR
+# 2= RED
+# 3= GREEN
+
+im.plotRGB(m1992, 1, 2, 3) # nir=1 on R 1992
+im.plotRGB(m2006, 1, 2, 3) # nir=1 on R 2006
+
+#------- Costruisco un Multiframe con 1992-2006 -------
 par(mfrow=c(1,2))
-im.plotRGB(m1992, r=2, g=3, b=1)
-im.plotRGB(m2006, r=2, g=3, b=1)
+im.plotRGB(m1992, 1, 2, 3)
+im.plotRGB(m2006, 1, 2, 3)
 
-# DVI = NIR - RED --> bisogna sottrarre la banda numero1-numero2
-# bands: 1=NIR, 2=RED, 3=GREEN
+#---------------------- INDICE DVI (indice vegetazione)------------------
+# L’indice di DVI (Difference Vegetation Index) è un parametro utilizzato per valutare la salute delle piante e la copertura vegetale. 
+# L'indice si basa sulla differenza normalizzata tra la riflettanza della luce nel vicino infrarosso (NIR) e nel rosso (RED).
+# DVI = NIR - RED --> Bisogna sottrarre la BANDA1-BANDA2 (bands: 1=NIR, 2=RED, 3=GREEN)
 
-# Calcolare indice DVI (indice vegetazione)
-dvi1992 = m1992[[1]] - m1992[[2]] #in questo modo la funzione va a sottrarre la banda del rosso all'infrarosso
+# --- DVI 1992 ---
+dvi1992 = m1992[[1]] - m1992[[2]] # In questo modo la funzione va a sottrarre la banda del rosso all'infrarosso
 plot(dvi1992)
-dvi1992 #se vuoi vedere i valori dell'indice
+# dvi1992 # Se vuoi vedere i valori dell'indice
 
-#Il prof ha poi plottato dvi1992 costruendo una palette, io ho preferito usare viridis
-#cl <- colorRampPalette(c("darkblue", "yellow", "red", "black")) (100)
-#plot(dvi1992, col=cl)
+# Il prof ha poi plottato dvi1992 costruendo una palette, io ho preferito usare viridis
+# cl <- colorRampPalette(c("darkblue", "yellow", "red", "black")) (100)
+# plot(dvi1992, col=cl)
+
+# Plot con Viridis
 library(viridis)
 plot(dvi1992, col=viridis(100))
 
-# ORA CALCOLIAMO ANCHE IL DVI DEL 2006
+# --- DVI 2006 ---
+# Ora calcoliamo anche l'indice vegetazione del 2006
 dvi2006 = m2006[[1]] - m2006[[2]]
 plot(dvi2006, col=viridis(100))
 
-#Esercizio: plotta i due DVI uno affianco all'altro. Ognuna di queste mappe ci dice quanta vegetazione c'era in quel momento.
+# Esercizio: plotta i due DVI uno affianco all'altro. Ognuna di queste mappe ci dice quanta vegetazione c'era in quel momento.
 par(mfrow=c(1,2))
 plot(dvi1992, col=inferno(100))
 plot(dvi2006, col=inferno(100))
 
 
-# NDVI (NORMALIZED DIFFERENCE VEGETATION INDEX)
-#questo indice lo usiamo al opsto del DVI quando abbiamo immagini con bit diversi (ad esempio 8bit e 4 bit). Ci permette di cfare un confronto andando a effettuare una normalizzazione
-ndvi1992 = (m1992[[1]] - m1992[[2]]) / (m1992[[1]] + m1992[[2]]) #primo modo per sciverlo
-ndvi1992 = dvi1992 / (m1992[[1]] + m1992[[2]]) #se hai calcolato il dvi1992 puoi scriverlo anche così
+#--------------------- NDVI (NORMALIZED DIFFERENCE VEGETATION INDEX) ---------------------
+# Questo indice lo usiamo al posto del DVI quando abbiamo immagini con bit diversi (ad esempio 8 bit e 4 bit). Ci permette di fare un confronto andando a effettuare una normalizzazione
+# Formula [NDVI= (NIR - rosso)/(NIR + rosso)]
+
+#---NDVI 1992---
+ndvi1992 = (m1992[[1]] - m1992[[2]]) / (m1992[[1]] + m1992[[2]]) # Primo modo per sciverlo
+ndvi1992 = dvi1992 / (m1992[[1]] + m1992[[2]]) # Se hai calcolato il dvi1992 puoi scriverlo anche così
 plot(ndvi1992, col=inferno(100))
 
-# Ripeto il calcolo NDVI anche per l'immagine del 2006
+#---NDVI 2006---
 ndvi2006 = dvi2006 / (m2006[[1]] + m2006[[2]])
 plot(ndvi2006, col=inferno(100))
 
@@ -59,12 +76,23 @@ par(mfrow=c(1,2))
 plot(ndvi1992, col=inferno(100))
 plot(ndvi2006, col=inferno(100))
 
-#Se vuoi fare il plot con altri colori
-#clvir <- colorRampPalette(c("violet", "dark blue", "blue", "green", "yellow"))(100) # specifying a color scheme
-#par(mfrow=c(1,2))
-#plot(ndvi1992, col=clvir)
-#plot(ndvi2006, col=clvir)
+# Se vuoi fare il plot con altri colori
+# clvir <- colorRampPalette(c("violet", "dark blue", "blue", "green", "yellow"))(100) 
+# par(mfrow=c(1,2))
+# plot(ndvi1992, col=clvir)
+# plot(ndvi2006, col=clvir)
 
-# speediing up calculation
-ndvi2006a <- im.ndvi(m2006, 1, 2)
-plot(ndvi2006a, col=cl)
+dev.off()
+
+###------------------- CALCOLO INDICE NVDI PER SCEMI -------------------###
+# Bene, ora cancella tutto quanto detto fin'ora, perchè nel pacchetto imageRy c'è una fantastica funzione che fa tutto da sola
+# Usa funzione "im.ndvi()" specificando le 2 bande che vanno sottratte.
+
+# Con questa funzione tutto il codice si riassume in:
+library(imageRy)
+library(terra)
+library (viridis)
+
+m1992 <- im.import("matogrosso_l5_1992219_lrg.jpg")  
+ndvi1992 <- im.ndvi(m1992, 1, 2)
+plot(ndvi1992, col=viridis(100))
