@@ -1,29 +1,103 @@
-# quantifying land cover variability
+# Quantificare la variabilità della copertura del suolo
 
 # install.packages("ggplot2")
+# install.packages("patchwork")
 
 library(ggplot2)
 library(terra)
 library(imageRy)
+library(patchwork)
 
-# Listing images
+# Lista immagini
 im.list()
 
-# Importing data
+# Importo dati
 sun <- im.import("Solar_Orbiter_s_first_views_of_the_Sun_pillars.jpg")
 sunc <- im.classify(sun, num_clusters=3)
 
-# Mato Grosso images
+#------------------- Classifica le immagini ------------------- 
+# Funzione "im.classify()" classifica l'immagine scelta in un nuvero di cluster/classi scelto da noi
+sunc <- im.classify(sun, num_clusters=3)
+
+# Ripetiamo l'operazione di classificazione con altri dati
 m1992 <- im.import("matogrosso_l5_1992219_lrg.jpg")
 m2006 <- im.import("matogrosso_ast_2006209_lrg.jpg")
 
-# Classifying images
 m1992c <- im.classify(m1992, num_clusters=2)
-
-# class 1 = forest
-# class 2 = human
-
 m2006c <- im.classify(m2006, num_clusters=2)
 
-# class 1 = forest
-# class 2 = human
+#LEGENDA 
+# CLASSE 1 = Foresta
+# CLASSE 2 = Umani
+
+# --------- Convertire le 2 classi cluster in valori percentuali ---------
+
+# ------Calcolo Frequenza 1992-------
+# Utilizzando la funzione "freq()" otteniamo una tabella che mostra quante volte quante volte ciascuna CLASSE(1 o 2) appare nei dati.
+f1992 <- freq(m1992c)
+
+# Esempio Tabella ottenuta
+#   Classe   Count
+#    1      304437
+#    2      1495563
+
+#-------Calcolo il totale dei dati-------
+# Utilizzando la funzione "ncell()" posso calcolare ilnumero totale di celle non vuote
+tot1992 <- ncell(m1992c)
+
+# ---------Proporzioni 1992---------
+# Qui stiamo calcolando le proporzioni per ciascuna CLASSE. 
+# Dividiamo il numero di celle in qui è stata rilevata una CLASSE / il totale delle osservazioni. Questo ci dà la proporzione di ciascuna CLASSE rispetto al totale.
+prop1992 = f1992 / tot1992
+
+# ---------VALORI PERCENTUALI---------
+# Per ottenere i valori percentuali, moltiplica i valori relativi (proporzioni) * 100
+perc1992 = prop1992 * 100
+perc1992 # Mi dice che ho  17% human, 83% forest
+
+# -------RIPETO TUTTO PER IL 2006-------
+# Frequenza
+f2006 <- freq(m2006c)
+
+# Proporzioni
+tot2006 <- ncell(m2006c)
+prop2006 = f2006 / tot2006
+
+# Percentuali
+perc2006 = prop2006 * 100
+
+# 1992: 17% human, 83% forest
+# 2006: 45% human, 54% forest
+
+# ------------Costruisco un dataframe (tabella) con le 2 classi e i rispettivi valori ------------
+class <- c("forest", "human") # Creo vettore di testo usando le virgolette
+p1992 <- c(83, 17) # Creo vettore percentuali 1992
+p2006 <- c(54, 45) # Creo vettore percentuali 2006
+
+# Per costruire una tabella uso la funzione "data.frame()"
+# Nel nostro caso, il dataframe deve avere 3 colonne: "class" (contiene i testi “forest” e “human”) e "p1992", "p2006" (contengono valori%) 
+tabout <- data.frame(class, p1992, p2006)
+tabout # Mi mostrerà la tabella
+
+#-------------------------- Plottiamo l'output --------------------------
+# Usiamo la libreria "ggplot2()" per creare un GRAFICO A BARRE.
+# x= class : specifichiamo la variabile sull'asse delle X
+# y= p1992: specifichiamo variabile sull'asse Y 
+# color=class: impostiamo il colore delle barre in base alla variabile "class".
+# geom_bar(stat="identity"): stat="identity" indica che le altezze delle barre sono specificate direttamente dai dati;
+# geom_bar(fill="white"): indica il colore di riempimento delle barre, impostato su bianco
+
+ggplot(tabout, aes(x=class, y=p1992, color=class)) + geom_bar(stat="identity", fill="white")
+ggplot(tabout, aes(x=class, y=p2006, color=class)) + geom_bar(stat="identity", fill="white")
+
+#---------------- Patchwork------------------
+# Combinando i due grafici (p1 e p2) sovrapponendoli. Questo ci darà un grafico con le barre relative al 1992 e al 2006.
+p1 <- ggplot(tabout, aes(x=class, y=p1992, color=class)) + geom_bar(stat="identity", fill="white") # Creo grafico usando variabile 1996
+p2 <- ggplot(tabout, aes(x=class, y=p2006, color=class)) + geom_bar(stat="identity", fill="white") # Creo grafico usando variabile 2006
+p1 + p2
+
+# ---------------VARIAZIONE VALORE DEGLI ASSI----------
+# Uo la funzione "ylim()" per vambiare i limiti dell'asse Y
+p1 <- ggplot(tabout, aes(x=class, y=p1992, color=class)) + geom_bar(stat="identity", fill="white") + ylim(c(0,100))
+p2 <- ggplot(tabout, aes(x=class, y=p2006, color=class)) + geom_bar(stat="identity", fill="white") + ylim(c(0,100))
+p1 + p2
