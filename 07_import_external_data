@@ -45,9 +45,11 @@ soil <- rast("percorso_immagine.nc")
 # Plot
 plot(soil)
 
-#Mi caricherà tutto il globo. potrebbe essere utile fare un "RITAGLIO IMMAGINE"
-Per farlo, creo un vettore dove inserisco la latitudine e longitudine che mi interessa
+#------ CROP IMMAGINE ------
+# L'Iimmagine caricherà tutto il globo --> potrebbe essere utile fare un "RITAGLIO IMMAGINE" --> Utilizzo la funzione crop()
+
+# Per farlo, creo un vettore dove inserisco la latitudine e longitudine che mi interessa
 ext<-c(25,35,58,62)
 
-#Applico il vettore da me appena creato alla mia immagine
+# Applico il vettore da me appena creato alla mia immagine
 soilcrop<-crop(soil, ext)
