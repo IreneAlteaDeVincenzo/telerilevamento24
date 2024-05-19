@@ -1,7 +1,7 @@
-# Installing new packages
+# INSTALLING NEW PACKAGES
 
-# install.packages("x") è la funzione per installare i pacchetti da Cran
+# Utilizzare la funzione "install.packages()" per insallare pacchetti da Cran
 install.packages("terra") 
 
-# library (x) è la funzione per testare che l'installazione sia andata a buon fine
+# Caricare pacchetto utilizzando la funzione "library()"
 library(terra)
