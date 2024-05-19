@@ -3,15 +3,15 @@
 # ------------------ Utilizzare R come una calcolatrice ------------------ 
 a <- 6 * 7  # Il simbolo <- assegna i valori (6*7) al vettore chiamato "a"
 b <- 5 * 8
-a+b # R eseguirà l'operazione somma, mostrandoci il risultato
+a + b # R eseguirà l'operazione somma, mostrandoci il risultato
 
 # ARRAYS
 
 # ------------------ CREARE UN VETTORE ------------------ 
-flowers <-c(3, 6, 8, 10, 15, 18) # Questa riga di codice crea un vettore chiamato “flowers” contenente i seguenti valori: 3, 6, 8, 10, 15 e 18
+flowers <- c(3, 6, 8, 10, 15, 18) # Questa riga di codice crea un vettore chiamato “flowers” contenente i seguenti valori: 3, 6, 8, 10, 15 e 18
 flowers # Richiamando il vettore, posso vedere i numeri di cui è composto
 
-insects <-c(0, 16, 25, 42, 61, 73)
+insects <- c(0, 16, 25, 42, 61, 73)
 insects
 
 # Plottare i valori "flowers vs insects" in un grafico
