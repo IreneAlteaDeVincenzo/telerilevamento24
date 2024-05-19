@@ -2,7 +2,7 @@
 
 # ------------------ Utilizzare R come una calcolatrice ------------------ 
 a <- 6 * 7  # Il simbolo <- assegna i valori (6*7) al vettore chiamato "a"
-b <- 5*8
+b <- 5 * 8
 a+b # R eseguirà l'operazione somma, mostrandoci il risultato
 
 # ARRAYS
