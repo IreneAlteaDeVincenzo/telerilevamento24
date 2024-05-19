@@ -1,29 +1,28 @@
-#Secondo metodo per quantificare i cambiamenti nel tempo 
+# Analisi delle time series
+# Secondo metodo per quantificare i cambiamenti nel tempo 
 
 library(terra)
-lybrary(imagerY)
+library(imageRy)
+
+#-------------------- VARIAZIONE VALORI AZOTO DURANTE COVID -------------------- 
 
 im.list()
 
-#importa dati
-EN01 <- im.import("EN_01.png") #Iimmagine azoto europa a gennaio
-EN13 <- im.import("EN_13.png") #immagine atodo europa marzo
+# Importo dati
+EN01 <- im.import("EN_01.png") # Immagine azoto europa a gennaio
+EN13 <- im.import("EN_13.png") # Immagine atodo europa marzo
 
-#plot dati 
+# Plot multiframe
 par(mfrow=c(2,1))
-im.plotRGB.auto(EN01)  #funzione RGB per poter plottare automaticamente l'immagine con la 1°, 2° e 3° banda di colore
+im.plotRGB.auto(EN01) # La funzione "im.plotRGB.auto()" plotta automaticamente i dati utilizzando le bande 1, 2 e 3 in uno spazio RGB.
 im.plotRGB.auto(EN13)
 
-# using the first element (band) of images
-dif = EN01[[1]] - EN13[[1]]
-
-# Per fare la differenza tra le due immagini, andiamo a sottrarre la prima banda delle 2 immagini
+# ------ Calcolo differenza tra 2 immagini ------
+# Vado ad osservare la differenza tra le due immagini rispetto ad un layer specifico (in questo caso la 1° banda)
 dif = EN01[[1]] - EN13[[1]]
 plot(dif)
-# oppure richiamando library(viridis) --> plot(dif, col=viridis(100))
 
-
-# SCIOGLIMENTO GHIACCI IN GROENLANDIA
+#--------------------SCIOGLIMENTO GHIACCI IN GROENLANDIA------------------------
 
 im.list()
 
@@ -32,32 +31,43 @@ g2005 <- im.import("greenland.2005.tif")
 g2010 <- im.import("greenland.2010.tif")
 g2015 <- im.import("greenland.2015.tif")
 
-#Plotto immagini con funzione par, usando una scala definita da noi
-clg <- colorRampPalette(c("blue", "white", "red")) (100) #il blu è la porzione più fredda
+# Plotto immagini con funzione par, usando una scala definita da noi
+clg <- colorRampPalette(c("blue", "white", "red")) (100) # il blu è la porzione più fredda
 par(mfrow=c(2,2))
 plot(g2000, col=clg)
 plot(g2005, col=clg)
 plot(g2010, col=clg)
 plot(g2015, col=clg)
 
-#oppure posso plottare le immagini usando viridis 
-# par(mfrow=c(2,2))
-# plot(g2000, col=viridis(100))
-# plot(g2005, col=viridis(100))
-# plot(g2010, col=viridis(100))
-# plot(g2015, col=viridis(100))
+# Oppure posso plottare le immagini usando viridis 
+par(mfrow=c(2,2))
+plot(g2000, col=viridis(100))
+plot(g2005, col=viridis(100))
+plot(g2010, col=viridis(100))
+plot(g2015, col=viridis(100))
 
-#Faccio la differenza tra 2 immagini
+# -----AGGIUNTA MIA: aggiungiamo un titolo ai grafici!------
+# Usiamo main("titolo")
+par(mfrow=c(2,2))
+plot(g2000, col=viridis(100), main="2000")
+plot(g2005, col=viridis(100), main="2005")
+plot(g2010, col=viridis(100), main="2010")
+plot(g2015, col=viridis(100), main="2015")
+
+# ----------Differenza tra 2 immagini---------
+# Vado ad osservare la differenza tra le due immagini rispetto ad un layer specifico (in questo caso la 1° banda)
 diff00_15=g2000[[1]]-g2015[[1]]
 plot(diff00_15)
 
-#Oltre a fare par, posso plottare le immagini anche facendo uno stacking dei dati
+#--------------DIFFERENZA TRA IMMAGINI A PARTIRE DA UNO STACK (VETTORE)--------------
+# Posso plottare le immagini anche costruendo un vettore e plottandolo
 stack<-c(g2000,g2005,g2010,g2015)
 plot(stack, col=clg)
 
-#Faccio la differenza tra 2 immagini a partire direttamente dallo stacking
-difg <- stack[[1]] - stack[[4]]
-plot(difg, col=clg) #il blu è dove la temperatura è diminuita, il rosso dove è aumentata
+# Faccio la differenza tra 2 immagini a partire direttamente dallo stacking
+# Differenza copertura ghiacci tra il 2000-2015
+difg <- stack[[1]] - stack[[4]] # La [] serve a richiamare un oggetto contentuto nel vettore (1° e 4° elemento in questo caso)
+plot(difg, col=clg) # Il blu è dove la temperatura è diminuita nel 2015, il rosso è dove è aumentata
 
-#Volendo, posso fare anche un plot RGB plotttando l'annno g2000 su red, g2005 sul verde, g2015 sul blu
-#im.plotRGB(stack, r=1, g=2, b=4) #in questo modo, dove abbiamo più blu ad esempio vuol dire che nel 2015 la temperatura era più alta in quelle zone
+# Volendo, posso fare anche un plot RGB plotttando l'anno g2000 su red, g2005 sul verde, g2015 sul blu
+im.plotRGB(stack, r=1, g=2, b=4) # In questo modo, dove abbiamo più blu ad esempio vuol dire che nel 2015 la temperatura era più alta in quelle zone
