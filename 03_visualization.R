@@ -78,10 +78,10 @@ plot(stacksent[[4]], col=clcyan) # "[]" Serve a richimare un solo elemente di un
 # L'elemento [[4]] dello stack corrisponde alla banda del infrarosso=b8
 
 par(mfrow=c(2,2)) # In questo modo faccio un plot multiframe 2x2 
-im.plotRGB(stacksent, 3, 2, 1) # Cosa significano i numeri? Scrivendo "3" in R, dico al programma di associare R al 3°elemento del vettore. Scrivendo "2" in G, associo G al 2°elemento vettore.
-im.plotRGB(stacksent, 4, 2, 1) # In questo caso col numero "4" richiamo la banda infrarosso nella banda del RED
-im.plotRGB(stacksent, 3, 4, 1) # Metto infrarosso nella banda del GREEN
-im.plotRGB(stacksent, 3, 2, 4) # Mettendo infrarosso nella banda del BLU, vado a evidenziare il suolo nudo
+im.plotRGB(stacksent, 3, 2, 1) # Immagine reale. #Cosa significano i numeri? Scrivendo "3" in R, dico al programma di associare R al 3°elemento del vettore. Scrivendo "2" in G, associo G al 2°elemento vettore.
+im.plotRGB(stacksent, 4, 2, 1) # In questo caso col numero "4" richiamo la banda infrarosso nella banda del RED --> Vedrò la vegetazione rossa (ed evidenzio il suolo nudo)
+im.plotRGB(stacksent, 3, 4, 1) # Metto infrarosso nella banda del GREEN --> Vedrò la vegetazione verde
+im.plotRGB(stacksent, 3, 2, 4) # Mettendo infrarosso nella banda del BLU, --> Vedrò la vegetazione blu
 
 #---INFORMAZIONI SULL'IMMAGINE---
 # Per ottenere informazioni sull'immagine raster basta richiamarla.
