@@ -1,38 +1,48 @@
 # Come importare dati in R da risorse esterne
 
 library(terra)
+library(imageRy)
 
-#Selezioniamo la working directory da cui importare i dati usando la funzione "setwd("x)". Nell'oggetto (x) devi incollare il "percorso immagine"
+# -------------------- IMPORTARE IMMAGINE DE PC -------------------- 
+
+#-----Selezioniamo la working directory da cui importare i dati-----
+# Per farlo usiamo la funzione "setwd (x)"
+# Nell'oggetto (x) devi incollare il "percorso immagine"
 setwd("C:/Users/irene/Downloads")
 
-#ora carichiamo su R l'immagine con la funzione rast("x")
-eclissi<-rast("eclissi.png")
+# ------ Carichiamo immagine su R ------  
+# Per farlo, utilizziamo la funzione "rast(x)"
+# In (x) devi mettere il nome dell'immagine
+eclissi <- rast("eclissi.png") #NB: ti uscirà un Messaggio di avvertimento: [rast] unknown extent--> IGNORALO BELLAMENTE
 
-#facciamo il plot immagine 
-plotRGB(eclissi, 1, 2, 3)
+# Plot 
+im.plotRGB.auto(eclissi) # Metodo plot 1
+plotRGB(eclissi, 1, 2, 3) # Metodo plot 2
 
-#Volendo, possiamo fare il plot immagine  in modi diversi
+# Le immagini caricate saranno un po' diverse in funzione dello stretch operato dalla funzione che utilizzi.
+# Se vuoi, puoi confrontarli con "par()"
 par(mfrow=c(1,2))
 plotRGB(eclissi, 1, 2, 3)
-im.plotRGB(eclissi, 1, 2, 3) #usiamo ln questo caso la funzione di imageRy, quindi bisogna caricare il pacchetto.
-# Le immagini caricate saranno un po' diverse in funzione dello stretch operato dalla funzione che utilizzi.
+im.plotRGB.auto(eclissi) 
 
-#Ora possiano andare a fare tutte le operazioni già viste sulla nostra immagine. Qui sotto, alcuni esempi
+# Ora possiano andare a fare tutte le operazioni già viste sulla nostra immagine. Qui sotto, alcuni esempi
 
-#Fare la differenza tra 1° e 2° banda. Quetsa operazione ha senso ad esempio se voglio fare un CONFRONTO MULTITEMPORALE TRA IMMAGINI
+# Fare la differenza tra 1° e 2° banda. 
+# In questo caso è un'operazione inutile ma ha senso se voglio fare un CONFRONTO MULTITEMPORALE TRA IMMAGINI DIVERSE 
 dif=eclissi[[1]]-eclissi[[2]]
 
-#PER IMPORTARE IMMAGINI DA COPERNICUS
-#installare pacchetto per importare file da copernicus
+#----------------------IMPORTARE IMMAGINI DA COPERNICUS----------------------
+
+# Installare pacchetto per importare file da copernicus
 install.packages("ncdf4")
 
-#richiamare pacchetto
+# Richiamare pacchetto
 library(ncdf4)
 
-#importa il dato con la funnzione "rast"
-soil<-rast("percorso_immagine.nc")
+# Importa il dato con la funnzione "rast()"
+soil <- rast("percorso_immagine.nc")
 
-#plotta il dato
+# Plot
 plot(soil)
 
 #Mi caricherà tutto il globo. potrebbe essere utile fare un "RITAGLIO IMMAGINE"
