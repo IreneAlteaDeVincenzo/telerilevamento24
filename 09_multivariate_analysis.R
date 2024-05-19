@@ -27,21 +27,21 @@ pairs(stack) #R, G, B, hanno in questo caso un buon potenziare di correlazione, 
 
 # Su R, possiamo effettuare un'analisi multivariata PCA usando la funzione "im.pca()" --> funzione che compatta il set in poche dimensioni e restituisce le componenti PC1, PC2 
 pcimage <-im.pca(stack)
+
+#Ti uscità una griglia di valori:
+#Standard deviations (1, .., p=4):
+#[1] 1726.41823  501.01429   68.21149   27.09133 ----> Questi valori ti serviranno più avanti
+#
+#Rotation (n x k) = (4 x 4):
+#                            PC1        PC2         PC3         PC4
+#sentinel.dolomites.b2 0.4091898  0.2633750 -0.73691553  0.46920442
+#sentinel.dolomites.b3 0.4667633  0.2105509 -0.19777933 -0.83587300
+#sentinel.dolomites.b4 0.5987034  0.3829932  0.64625928  0.27788384
+#sentinel.dolomites.b8 0.5062114 -0.8600106  0.01370347  0.06280215
+
+# Plot 
 plot(pcimage, col=viridis(100))
 
-# Per visualizzare i valori richiamo "pcimage" --> mi uscità una tabella del genere: 
-pcimage
-# class       : SpatRaster 
-# dimensions  : 934, 1059, 3  (nrow, ncol, nlyr)
-# resolution  : 10, 10  (x, y)
-# extent      : 740350, 750940, 5158820, 5168160  (xmin, xmax, ymin, ymax)
-# coord. ref. : WGS 84 / UTM zone 32N (EPSG:32632) 
-# source(s)   : memory
-# names       :       PC1,      PC2,       PC3 # Valori assi PCA 
-# min values  : -2056.384, -3297.38, -988.7072 
-# max values  :  9275.047,  2113.46,  975.5413 
-
-
 # Per conoscere la variabilità esplicata dal primo asse PC1, posso calcolare i valori di standard deviation e fare la somma 
-tot<-sum(1554.35604,  505.76984,   45.39869,   32.62567)
-1554.35604*100/tot # Mi uscità un valore, ad esempio 72% che mi dice la variavilità del primo asse
+tot<-sum(1554.35604,  505.76984,   45.39869,   32.62567) # Sommo i valori di deviazione standard
+1554.35604*100/tot # Mi uscità un valore, ad esempio 72% che mi dice la variabilità rappresentata dal primo asse PC1
