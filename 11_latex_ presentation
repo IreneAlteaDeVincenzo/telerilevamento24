@@ -93,17 +93,19 @@ Formula per calcolare la deviazione standard
     \end{figure}
 \end{frame}
 
-\begin{frame}{Columns}
-    \begin{columns}
-        \begin{column}{width=.5\textwidth}
-            A small amount of text  here or a larger one as we wish...
-        \end{column}
-        
-        \begin{column}{width=.5\textwidth}
-            \includegraphics[width=.4\linewidth]{stats.png}
-        \end{column}
-    \end{columns}
-\end{frame}
+% FARE COLONNE
+\begin{frame}{Fare colonne}
+\begin{column} {0.5\textwidth}
+    Posso scrivere una piccola parte di testo in colonna
+\end{column}
 
+\bigskip
+
+        \begin{column}{0.5\textwidth}
+        Guardate che patata felice. 
+        \includegraphics[width=0.4\linewidth]{patata2.jpg} % Per allineare un'immagine al fianco della colonna
+        \end{column}
+
+\end{frame}
 
 \end{document}
