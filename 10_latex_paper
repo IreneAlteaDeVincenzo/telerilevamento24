@@ -1,0 +1,120 @@
+% COME SCRIVERE UN PAPER CON LATEX
+
+% Per i commenti
+% In LaTeX le funzioni iniziano con \ e sono contenute all'interno di parentesi graffe {}
+
+\documentclass[a4paper, 12pt]{article} % \documentclass{nometemplate} --> Indica il tipo di documento che andremo a creare
+\usepackage{graphicx} % Pacchetto necessario per inserire immagini
+\usepackage{lineno} % Per aggiungere numeri di linea a un documento latex
+\usepackage{hyperref} % Per creare collegamenti ipertestuali
+\usepackage{natbib} % Espansione pacchetto riferimenti
+\usepackage{color} % Per usare colori nel tuo testo \textcolor{red}{This text is red.}
+\linenumbers % Numera ogni riga
+\linespread{1.5} % Cambia l'interlinea del documento
+
+% Okay, impostati i paramentri iniziali, inseriamo i primi dati:
+
+\title{Il mio primo documento in LaTeX} % Mi fa aggiungere un titolo
+\author{Irene Altea De Vincenzo} % Imposto l'autore
+\date{07 Maggio 2024} % Imposto la data. Se non scrivo nulla Overleaf prenderà la data nel computer
+
+\begin{document} % Inizio documento
+
+\maketitle % Copia tutta la parte iniziale del documento, cioè l'Header, impostando la pagima iniziale
+\nolinenumbers % Rimuove la numerazione fastidiosa per ogni riga del documento
+
+$^1$ UNIBO - via Vattela a Pesca 3. Dipartimento del " Ma io volevo solo leccar sassi"
+
+\tableofcontents % Crea l'indice
+
+\begin{abstract} % Mi crea un abstract per il documento
+La storia è strana ed improbabile e trova sempre il modo per sorprenderti.  
+\end{abstract} % Chiude l'abstract
+
+\section{Introduction} % Apre un paragrafo e numera il titolo. \section*{Introduction} --> L'asterisco NON fa mettere il numero
+\tb La vita è davvero piena di sorprese e situazioni imprevedibili, vero?A volte sembra che la realtà stessa stia scrivendo una sceneggiatura strana e avventurosa.
+
+%------------------ COME INIZIARE UNA SEZIONE---------------------
+\section{ASSURDE COINCIDENZE STORICHE}
+\subsection{CESARE E I PIRATI} % Apre un sotto-paragrafo numerato
+\textbf{75ac}. Dei pirati abbordano una galera romana e rapiscono un giovane (Figure \ref{fig:enter-label}, chiedendo un riscatto di 20 talenti.
+Il giovanotto, invece di spaventarsi, inizia a ridere e suggerisce ai pirati di chiedere almeno 50 talenti, poichè \textit{“Lui non vale mica così poco!"} 
+I pirati lo prendono per scemo e lo deridono.
+Giunti a terra per ricevere il riscatto, il giovane continua a scherzare, minacciando di farli crocifiggere tutti una volta libero. I pirati ridono ancora di più, prendono i soldi e se ne vanno.
+
+\noindent Peccato che... era \textcolor{red}{Giulio Cesare}: il giorno dopo si presenta con una flotta al seguito nello stesso posto in cui era stato rapito, li cattura tutti e li fa crocifiggere.
+
+\noindent Sad story but good. 
+
+%\textbf{} --> Mette le parole in grassetto
+%\textit {} --> Il testo dentro le parentesi diventa in corsivo
+% \noindent rimuove l'indentazione della prima riga del paragrafo corrente
+% \url{} --> Inserisce il link indicato tra parentesi nel testo
+% \newpage --> crea una nuova pagina
+
+% --------------------- COME AGGIUNGERE ELENCO PUNTATO ---------------------
+\noindent Questa storia ci insegna che:
+\begin{itemize} % Per iniziare elenchi puntati
+    \item Se vuoi rapire qualcuno è sempre meglio informarsi su chi sia; % \item per aggiungere un punto
+    \item Mai rompere il cazzo a Giulio Cesare;
+    \item Se rompi il cazzo a Giulio Cesare, almeno sii abbastamza furbo da scappare lontano.
+\end{itemize} % Chiude sezione puntata
+
+% --------------------- COME AGGIUNGERE ELENCO NUMERATO ---------------------
+\noindent Ulteriori insegnamenti:
+\begin{enumerate} % Per iniziare elenchi numerati
+    \item Giovane non vuol dire stupido; % \item per aggiungere una nuova voce all'elenco
+    \item Forse era meglio scegliere un lavoro onesto;
+\end{enumerate} % Chiude sezione numerata
+
+\subsection{QUANDO LA SFIGA TI PERSEGUITA}
+\textbf{1°Guerra mondiale}. I tedeschi amavano la tattica del "camuffaggio": ridipingevano le navi per farle assomigliare a quelle nemiche, così da potersi avvicinare abbastanza da poterle affodnare. 
+\noindent La "Trafalgar" tedesca fu quindi traversita da "Carmanian" (inglese). La finta nave inglese, appena ridipinta, prende il mare, alla ricerca di nemici da affondare. 
+
+\noindent Ma indovinate un po' qual è la prima nave che incontrò? LA VERA CARMANIAN!!!... che ovviamente la affondò immediatamente.
+
+\noindent Il tutto farebbe già ridere così...se non fosse che la Carmanian (quella vera), era a sua volta, travestita da Trafalgar!
+
+Insomma: tedeschi travestiti da inglesi, inglesi travestiti da tedeschi...chissà che cavolo gli è passato per la testa mentre si affondavano a vicenda. 
+
+\subsection{COME SCRIVERE LE EQUAZIONI}
+\subsubsection{Torniamo alle cose serie, che qui bisogna imparare a scrivere le equazioni}
+Guarda quanto è scritta carina questa equazione \ref{eq:newton} %\ref serve a fare rifetimenti all'interno del testo, una volta che li hai etichettati con \label
+
+% --------------------- COME AGGIUNGERE EQUAZIONI ---------------------
+% \begin{equation} e \end{equation} --> Permette di creare un'equazione
+% _1--> Il numero dopo l'underscore lo rende un pedice 
+% ^2 --> Il cappellino trasforma il numero in un apice
+% \times --> Aggiunge il simbolo della moltiplicazione
+% \sqrt[numero] --> Mette tutto sotto una radice quadrata.
+% \sqrt[3]{} --> Se voglio fare una radice cubica devo scrivere il 3 all'interno delle parentesi quadre
+% \sum P1 --> Simbolo della sommatoria per la variabile P1
+
+\begin{equation}
+    F = \sqrt[3]{G \times \frac{m_1 \times m_2}{r^2}}
+    \label{eq:newton}
+\end{equation}
+
+\section{Risultati}
+Okay forse, nonostante tutto, sto Latex è fattibile.
+
+\section{Discussion}
+Non importa quanto sei bravo e ti impegni nella vita, se Dio ce l'ha con te, stai certo che ti farà il culo.
+\citep{Dioburlone}.
+
+% --------------------- COME INSERIRE LA BIBLIOGRAFIA --------------------- 
+%\bibitem[]{}  --> Aggiunge una citazione bibliografica nel database. {} Quello che c'è nelle parentesi graffe funge da Etichetta. [] Quello che c'è tra parentesi quadre è quello che apparirà nel testo (quando andiamo a citare la bibliografia)
+% \cite{Dio burlone} --> Aggiunge una citazione bibliografica al testo. Tra le parentesi graffe inseriamo l'Etichetta e come risultato otteniamo quello che abbiamo messo nelle parentesi quadre della funzione \bibitem
+\begin{thebibliography}{999}
+    \bibitem[Dio è un burlone,2024]{Dioburlone}
+    Cristiani et alii, (2024). ‘Quell'infame mi ha fregato'. Paradise's journal, (prayer ediction).
+\end{thebibliography}
+
+%--------------------- COME INSERIRE IMMAGINE ---------------------
+\begin{figure} % Inserisce immagine
+    \centering % Centra immagine
+    \includegraphics[width=0.5\linewidth]{cesare01.jpg} % Grandezza immagine
+    \caption{Immagine Giulio Cesare} % Aggiungi testo sotto foto 
+    \label{fig:enter-label} % Etichetta per richiamare l'immagine
+\end{figure}
+\end{document}
