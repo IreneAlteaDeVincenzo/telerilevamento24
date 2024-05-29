@@ -1,0 +1,109 @@
+% LA MIA PRIMA PRESENTAZIONE IN LATEX
+
+\documentclass{beamer} % Tipo di documento. Beamer è un pacchetto Latex x creare presentazioni
+\usepackage{graphicx} % Required for inserting images
+
+% TEMA E VARIAZIONE COLORI: 
+% https://mpetroff.net/files/beamer-theme-matrix/  per vedere temi e colori disponibili
+\usetheme{Frankfurt} % Altri temi carini: Bergen, Montpellier
+\usecolortheme{spruce} % Altri colori carini utilizzabili: crane, seahorse, whale
+
+\title{Presentazione in LaTeX} % Per mettere il titolo della presentazione
+\author{Irene Altea De Vincenzo} % Per mettere l'autore
+\date{May 2024} % Per mettere la data
+
+\begin{document} % Per iniziare il documento
+
+\maketitle % Crea slide iniziale con le informazioni fornite
+
+% --- Creare un comando che viene esequito all'inizio di ogni sezione --- 
+
+% \AtBeginSection[]: Questo comando viene eseguito all’inizio di ogni sezione --> quando inizia una nuova sezione, il codice all’interno delle parentesi graffe { ... } verrà eseguito.
+
+% \begin{frame}{Outline}: Questo comando crea una nuova slide con il titolo “INDICE”. Il testo tra parentesi graffe verrà visualizzato come titolo della slide.
+
+% \tableofcontents[currentsection]: Questo comando genera un elenco delle sezioni della presentazione. L’opzione currentsection indica che verranno elencate solo le sottosezioni della sezione corrente.
+
+\AtBeginSection[] 
+{
+\begin{frame}{INDICE}
+\tableofcontents[currentsection]
+\end{frame}
+}
+
+\section{Introduzione} % Definisco nuova sezione
+
+\begin{frame}{My first slide} % Inserisco nuova slide e metto il titolo slide
+    Qui puoi scrivere il testo che vuoi mettere nella slide
+\end{frame} % Chiudo slide
+
+\begin{frame}{ Facciamo un elenco puntato}
+In questa slide proverò a fare il mio primo elenco puntato
+    \begin{itemize} % Inizio elenco 
+        \item Punto 1 % Aggiungo un primo punto
+        \item \pause Punto 2 % Aggiungo un secondo punto etc..
+        \item \pause Punto 3
+    \end{itemize} % Chiudo elenco puntato
+\end{frame} % Chiudo slide
+
+\begin{frame}{Cambiamo la dimensione del testo}
+    \scriptsize{Scriviamo un testo in piccolo} % \scriptsize{} imposta una dimnesione del testo ridotta
+    
+    \huge{Scriviamo il testo in grande} % \huge serve per scrivere il testo grande
+\end{frame}
+
+\begin{frame}{Cambiamo la tipologia di testo}
+    Cambiamo il tipo di testo 
+    \bigskip % Serve a lasciare un grande spazio tra una riga e l'altra
+    
+    Cambiamo il \textbf{tipo} di testo % \textbf{} --> grassetto
+    \bigskip
+    
+    Cambiamo il \textit{tipo} di testo % \textit{} --> corsivo 
+\end{frame}
+
+\section{FORMULE} % Apriamo nuova sezione
+
+\begin{frame}{Formule }
+Formula per calcolare la deviazione standard
+\bigskip
+    \begin{equation}
+        \delta = \sqrt{\frac{\displaystyle\sum_{i=1}^{N}{(x - \mu)^2}}{N}}
+    \end{equation}
+\end{frame}
+
+\section{Risultati}
+
+\begin{frame}{Risultati raggiunti}
+   \begin{figure}
+       \centering
+       \includegraphics[width=0.5\linewidth]{patata1.jpg}
+       \caption{Sono un patata a programmare}
+       \label{fig:patata1}
+   \end{figure}
+\end{frame}
+
+\begin{frame}{Confronto}
+    \begin{figure}
+        \centering
+        \includegraphics[width=.4\linewidth]{patata2.jpg}
+        \includegraphics[width=.4\linewidth]{patata1.jpg}
+        \caption{Irene prima vs dopo}
+        \label{confronto}
+    \end{figure}
+\end{frame}
+
+\begin{frame}{Columns}
+    \begin{columns}
+        \begin{column}{width=.5\textwidth}
+            A small amount of text  here or a larger one as we wish...
+        \end{column}
+        
+        \begin{column}{width=.5\textwidth}
+            \includegraphics[width=.4\linewidth]{stats.png}
+        \end{column}
+    \end{columns}
+\end{frame}
+
+
+\end{document}
