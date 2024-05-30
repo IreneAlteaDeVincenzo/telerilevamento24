@@ -31,7 +31,7 @@ im.plotRGB(m2006, 1, 2, 3)
 
 #---------------------- INDICE DVI (indice vegetazione)------------------
 # L’indice di DVI (Difference Vegetation Index) è un parametro utilizzato per valutare la salute delle piante e la copertura vegetale. 
-# L'indice si basa sulla differenza normalizzata tra la riflettanza della luce nel vicino infrarosso (NIR) e nel rosso (RED).
+# L'indice si basa sulla differenza tra la riflettanza della luce nel vicino infrarosso (NIR) e nel rosso (RED).
 # DVI = NIR - RED --> Bisogna sottrarre la BANDA1-BANDA2 (bands: 1=NIR, 2=RED, 3=GREEN)
 
 # --- DVI 1992 ---
