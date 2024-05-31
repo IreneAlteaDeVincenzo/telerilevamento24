@@ -1,10 +1,10 @@
-# telerilevamento24
+# Telerilevamento24
 
 This report is throught for remote sensing lecture at UNIBO🛰️
 
 ## Master programs involved
 
-this course involves the following master programs:
+This course involves the following master programs:
 
 + Scienze e gestione della natura
 + Geologia e Territorio
