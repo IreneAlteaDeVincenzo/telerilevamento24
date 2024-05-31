@@ -1,0 +1,59 @@
+# Progetto Irene Altea De Vincenzo
+# 2024
+
+# Carico i pacchetti necessari
+library(terra)
+library(imageRy)
+library(ncdf4) # Pacchetto per importare file da copernicus
+library(viridis)
+
+#-----Selezioniamo la working directory da cui importare i dati-----
+# Per farlo usiamo la funzione "setwd (x)"
+# Nell'oggetto (x) devi incollare il "percorso immagine"
+setwd("C:\Users\irene\Downloads\project_teler")
+
+
+# ------ Carichiamo immagini su R ------  
+# Per farlo, utilizziamo la funzione "rast(x)"
+# In (x) devi mettere il nome dell'immagine
+XXXX<- rast("XXXX")
+
+#----------- Plot ----------- 
+im.plotRGB.auto(eclissi) # Metodo plot 1
+plotRGB(eclissi, 1, 2, 3) # Metodo plot 2
+
+# Oppure posso plottare le immagini usando viridis 
+par(mfrow=c(2,2))
+plot(g2000, col=viridis(100))
+plot(g2005, col=viridis(100))
+plot(g2010, col=viridis(100))
+plot(g2015, col=viridis(100))
+
+# -----AGGIUNTA MIA: aggiungiamo un titolo ai grafici!------
+# Usiamo main("titolo")
+par(mfrow=c(2,2))
+plot(g2000, col=viridis(100), main="2000")
+plot(g2005, col=viridis(100), main="2005")
+plot(g2010, col=viridis(100), main="2010")
+plot(g2015, col=viridis(100), main="2015")
+
+# ----------Differenza tra 2 immagini---------
+# Vado ad osservare la differenza tra le due immagini rispetto ad un layer specifico (in questo caso la 1° banda)
+diff00_15=g2000[[1]]-g2015[[1]]
+plot(diff00_15)
+
+#--------------DIFFERENZA TRA IMMAGINI A PARTIRE DA UNO STACK (VETTORE)--------------
+# Posso plottare le immagini anche costruendo un vettore e plottandolo
+stack<-c(g2000,g2005,g2010,g2015)
+plot(stack, col=clg)
+
+# Faccio la differenza tra 2 immagini a partire direttamente dallo stacking
+# Differenza copertura ghiacci tra il 2000-2015
+difg <- stack[[1]] - stack[[4]] # La [] serve a richiamare un oggetto contentuto nel vettore (1° e 4° elemento in questo caso)
+plot(difg, col=clg) # Il blu è dove la temperatura è diminuita nel 2015, il rosso è dove è aumentata
+
+# Volendo, posso fare anche un plot RGB plotttando l'anno g2000 su red, g2005 sul verde, g2015 sul blu
+im.plotRGB(stack, r=1, g=2, b=4) # In questo modo, dove abbiamo più blu ad esempio vuol dire che nel 2015 la temperatura era più alta in quelle zone
+
+
+
