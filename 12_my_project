@@ -1,6 +1,9 @@
 # Progetto Irene Altea De Vincenzo
 # 2024
 
+#Installo pacchetto per caricare raster
+install.packages("raster")
+
 # Carico i pacchetti necessari
 library(terra)
 library(imageRy)
@@ -11,8 +14,7 @@ library(viridis)
 #-----Selezioniamo la working directory da cui importare i dati-----
 # Per farlo usiamo la funzione "setwd (x)"
 # Nell'oggetto (x) devi incollare il "percorso immagine"
-setwd("C:\Users\irene\Downloads\project_teler")
-
+setwd("C:/Users/irene/Downloads/project_teler") # NB) Affinchè funzioni cambia gli slash (\) --> in backslash (/
 
 # ------ Carichiamo immagini su R ------  
 # Per farlo, utilizziamo la funzione "rast(x)"
