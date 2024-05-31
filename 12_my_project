@@ -4,6 +4,7 @@
 # Carico i pacchetti necessari
 library(terra)
 library(imageRy)
+library(raster)
 library(ncdf4) # Pacchetto per importare file da copernicus
 library(viridis)
 
