@@ -78,18 +78,8 @@ plot(dvi, col=viridisc)
 ```
 
 ## Calculating spatial variability
+Calculating variability:
 ```{r, eval=T}
-sd5<- focal(mato1992[[1]], matrix(1/25, 5, 5), fun=sd)
-```
-
-im.list()
-
-```
-## triplo Main BLA BA
-
-In this case you attain a result: 
-```{r, eval=F}
-im.import("matogrosso_ast_2006209_lrg.jpg" )
-```
-
+sd5 <- focal(mato1992[[1]], matrix(1/25, 5, 5), fun=sd)
+plot(sd5, col=viridisc)
 ```
