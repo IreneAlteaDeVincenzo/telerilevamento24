@@ -1,13 +1,24 @@
 # Progetto Irene Altea De Vincenzo
 # 2024
 
-#Installo pacchetto per caricare raster
-install.packages("raster")
+#Installo pacchetti utili
+install.packages("ggplot2") # Libreria per la creazione di grafici statistici.
+install.packages("raster") # Libreria per lavorare con dati raster, come immagini satellitari o mappe.
+install.packages("rasterVis") # RasterVis è un’estensione di raster per la visualizzazione avanzata di dati raster ( mappe di calore, profili di elevazione etc.)
+install.packages("rgdal") # Per importare dati geospaziali in R e convertirli in formati compatibili.
+install.packages("viridis") # Libreria per la creazione di mappe di colore (colormap) vicibili anche ai daltonici
+install.packages("patchwork") # Libreria per la composizione di più grafici creati con ggplot 2 in un’unica visualizzazione
+install.packages("ncdf4") # Pacchetto per importare dati da Copernicus
 
 # Carico i pacchetti necessari
 library(terra)
 library(imageRy)
 library(raster)
+library(ggplot2)
+library(viridis)
+library(patchwork)
+library(rasterVis)
+library(rgdal)
 library(ncdf4) # Pacchetto per importare file da copernicus
 library(viridis)
 
