@@ -1,0 +1,66 @@
+#IDEE SPARSE PER L'ESAME
+
+#------------------------ PROVA: STUDIARE EMISSIONI EDIFICIO VULCANICO----------------------------------------
+# programma R che carica due raster, denominati “CO2” e “SO2”, e calcola il rapporto CO2/SO2
+
+# Carica le librerie necessarie
+library(raster)
+
+# Carica i raster CO2 e SO2 (assicurati che i file siano presenti nella tua directory di lavoro)
+CO2_raster <- raster("CO2.tif")
+SO2_raster <- raster("SO2.tif")
+
+# Effettua l'operazione CO2/SO2
+result_raster <- CO2_raster / SO2_raster
+
+# Visualizza il risultato 
+plot(result_raster
+
+#------------------------------- PROVA: VARIAZIONI NEL SUOLO ------------------------------------------------------
+# Calcola le variazioni del suolo (uplift e subsidenza) a partire da due immagini
+# Carica la libreria raster
+library(raster)
+
+# Carica le immagini raster "IM_17" e "IM_18" (assicurati che i file siano presenti nella tua directory di lavoro)
+IM_17_raster <- raster("IM_17.tif")
+IM_18_raster <- raster("IM_18.tif")
+
+# Calcola la differenza tra le due immagini (subsidenza o uplift)
+variazione_suolo <- IM_18_raster - IM_17_raster
+
+# Visualizza la mappa delle variazioni del suolo (opzionale)
+plot(variazione_suolo, main = "Variazioni del Suolo (IM_18 - IM_17)")
+
+#--------------------------------- PROVA: TAGLIA RASTER NELLE COORDINATE DA ME SCELTE---------------------------------------------
+
+# Definisci le coordinate del rettangolo di taglio
+xmin <- 100  # Coordinata x minima
+xmax <- 200  # Coordinata x massima
+ymin <- 50   # Coordinata y minima
+ymax <- 150  # Coordinata y massima
+
+# Taglia il raster
+raster_tagliato <- crop(raster_data, extent(xmin, xmax, ymin, ymax))
+
+# Salva il raster tagliato (sostituisci "path_raster_tagliato" con il percorso di destinazione)
+writeRaster(raster_tagliato, filename = "path_raster_tagliato", format = "GTiff")
+
+# Visualizza il risultato
+plot(raster_tagliato)
+
+#------------------------------------- PROVA: GRAFICO CON PUNTI E LINEE DI ANDAMENTO -------------------------------------
+x <- DATO
+y <- DATO
+
+# Crea un grafico a punti
+plot(x, y, pch = 16, col = "blue", main = "Grafico a Punti con Linea di Andamento")
+
+# Aggiungi una linea di andamento
+lines(x, y, col = "red", lwd = 2)
+
+# Etichette degli assi
+xlab("Asse X")
+ylab("Asse Y")
+
+# Legenda
+legend("topright", legend = c("Punti", "Linea"), col = c("blue", "red"), lwd = 2)
