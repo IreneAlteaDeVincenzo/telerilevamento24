@@ -1,0 +1,5 @@
+f <- list.files(path = "C:/Users/irene/Desktop/project_teler", pattern = 'tif$', full.names = TRUE)
+
+# Carica tutti i raster
+rasters <- lapply(f, raster)
+
