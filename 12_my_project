@@ -16,11 +16,10 @@ library(imageRy)
 library(raster)
 library(ggplot2)
 library(viridis)
-library(patchwork)
-library(rasterVis)
-library(rgdal)
 library(ncdf4) # Pacchetto per importare file da copernicus
-library(viridis)
+
+# library(rgdal)
+# library(patchwork)
 
 #-----Selezioniamo la working directory da cui importare i dati-----
 # Per farlo usiamo la funzione "setwd (x)"
