@@ -1,0 +1,123 @@
+# WORKING PROGRESS
+
+# install knitr
+install.packages("knitr") # on knitr, puoi eseguire il codice R all’interno di un documento e visualizzare i risultati direttamente nel testo.
+
+# install the rmarkdown package
+install.packages("rmarkdown") # uoi creare documenti in vari formati, come HTML, PDF, Word o presentazioni, utilizzando il linguaggio Markdown.
+
+# install ggplot for plotting
+install.packages("ggplot2") # puoi creare grafici personalizzati, istogrammi, scatter plot, grafici a barre 
+
+# install dplyr for data manipulation
+install.packages("dplyr") # Fornisce funzioni per filtrare, selezionare, aggregare e trasformare i dati.
+
+# load libraries
+library(terra)
+library(knitr)
+library(rmarkdown)
+library(ggplot2)
+library(stringr) # mi è servita per rinominare i file delle cartelle
+library(imageRy)
+library(raster)
+library(sp)
+
+# IMPOSTimageRy# IMPOSTARE DIRECTORY LAVORO
+# Una directory di lavoro è uno spazio organizzato o una directory sul tuo computer in cui conservi dati, script e output.
+# Crea una cartella. poi vai su R e Strumenti –> Opzioni globali –> Iimpostazione Generale --> Ozioni globali 
+# --> imposta cartella come directory
+
+setwd("C:/Users/irene/Downloads/Tele-project")
+getwd() # Serve a vedere il percorso della working directory
+
+# -----------------------------------------------------------------------------------------------
+# CREARE FUNZIONI IN R
+# esempio di funzione: calcolare L’Indice Normalizzato di Bruciatura (NBR) 
+# NBR= (NIR-SWIR)/(NIR+ SWIR)
+
+# Definisco i nomi delle due variabili della mia funzione
+nbr <-function(nir, swir) {
+  nbr_output <- ((nir-swir)/(nir+swir)) # scrivo la mia funzione
+  return(nbr_output) # "Return" mi ha l'output di uscita della mia funzione
+}
+
+nbr(10, 20) # Richiamo la funzione con "nbr" e gli assegno 2 valori
+
+
+  
+#----------------------------------------- CREARE UNA LISTA DI FILE-------------------------------------------------------------------
+# CREARE UNA LISTA DI FILE
+# percorso_cartella <- "C:/percorso/della/tua/cartella"
+
+# Ottieni tutti i nomi dei file (senza i percorsi completi)
+nomi_file <- list.files(path = percorso_cartella, full.names = FALSE)
+
+# Stampa i nomi dei file
+print(nomi_file)
+
+# Creo una funzione lista______DATI 4 MAGGIO
+list_4may <- list.files(path = "C:/Users/irene/Downloads/Tele-project/dati/land-4_05_22", full.names = FALSE)
+print(list_4may)
+
+
+# Creo una funzione lista______DATI 6 GIUGNO
+list_5june <- list.files(path = "C:/Users/irene/Downloads/Tele-project/dati/land-5_06_22", full.names = FALSE)
+print(list_5june)
+
+#----------------------------------------- IMPORTARE DATI -----------------------------------------------------------------
+
+# BANDE
+# b1= viola
+# b2= BLU
+# b3= VERDE
+# b4= ROSSO
+# b5= vicino infrarosso (NIR)
+# b6= swir 1
+# b7= swir 3
+# b8= pancromatica
+# b9= cirro
+# b10= infrarosso termico
+# b11= altra banda infrarosso termico
+
+# Imposto working directory
+setwd("C:/Users/irene/Downloads/Tele-project/dati/")
+
+# 4 MAGGIO BANDE
+may4_B2 <- rast("LC_04may_B2.TIF")
+may4_B3 <- rast("LC_04may_B3.TIF")
+may4_B4 <- rast("LC_04may_B4.TIF")
+# may4_B5 <- rast("LC_04may_B5.TIF")
+# may4_B6 <- rast("LC_04may_B6.TIF")
+# may4_B7 <- rast("LC_04may_B7.TIF")
+# may4_B8 <- rast("LC_04may_B8.TIF")
+# may4_B9 <- rast("LC_04may_B9.TIF")
+may4_B10 <- rast("LC_04may_B10.TIF")
+may4_B11 <- rast("LC_04may_B11.TIF")
+
+
+# 5 GIUGNO BANDE
+june5_b2 <- rast("LC_5june_B2.TIF")
+june5_b3 <- rast("LC_5june_B3.TIF")
+june5_b4 <- rast("LC_5june_B4.TIF")
+# june5_b5 <- rast("LC_5june_B5.TIF")
+# june5_b6 <- rast("LC_5june_B6.TIF")
+# june5_b7 <- rast("LC_5june_B7.TIF")
+# june5_b8 <- rast("LC_5june_B8.TIF")
+# june5_b9 <- rast("LC_5june_B9.TIF")
+june5_b10 <- rast("LC_5june_B10.TIF")
+june5_b11 <- rast("LC_5june_B11.TIF")
+
+
+# ---------------------- STACK & PLOT -------------------------------
+
+# INIZIAMO DAL 4 MAGGIO
+# Creo un vettore con tutti i dati
+vec_4may <- c(may4_B4, may4_B3, may4_B2)
+xx <-im.plotRGB.auto(vec_4may)
+
+# Eseguo stack delle bande per ottenere un'immagine satelitare
+# stack_4may <- stack(c(may4_B2, may4_B3, may4_B4))
+# plotRGB(stack_4may, r = 4, g = 3, b = 2)
+
+# Verifica le informvec_4may# Verifica le informazioni sullo stack
+print(stack_may4)
