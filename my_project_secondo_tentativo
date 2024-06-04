@@ -52,7 +52,7 @@ plot(band8_diff)
 
 # Soglia per identificare le aree bruciate
 # Questo valore può variare in base al contesto. Nel mio caso l'ho impostato "ad occhio" dal plot
-soglia <- -50 
+soglia <- -40 
 
 # Identifico come "area bruciata" unicamente le aree al di sotto nel valore soglia 
 burned_areas <- band8_diff < soglia
@@ -88,16 +88,18 @@ freq_classi
 
 # Tabella frequenza visualizzata
 # layer value  count
-#   1     0    681501
-#   1     1     7067
+#   1     0    680476
+#   1     1     8092
 
 # CALCOLO AREA
 # L'area di ciascuna cella: risoluzione del raster = 1 metro.
-# L'area bruciata tot sarà pari a --> 7067*(1m)^2= 7067m^2
+# L'area bruciata tot sarà pari a --> 8092*(1m)^2= 7067m^2
 
-area_tot_bruciata <- 7067 * (1)^2 
+area_tot_bruciata <- 8092 * (1)^2 
 area_tot_bruciata
 
+###################################################################################################################
+# METODO 2
 ###################################################################################################################
 # CALCOLO INDICE NORMALIZZATO DI BRUCIATURA (NBR)
 # NBR= (NIR-SWIR)/(NIR+ SWIR)
@@ -132,44 +134,11 @@ print(list_4may)
 apr27_b8 <- rast("27apr_B8.tiff")
 apr27_b12 <- rast("27apr_B12.tiff")
 
-
 # 14 SETTEMBRE BANDE
 sett14_b8 <- rast("sett14_B8.tiff")
 sett14_b12 <- rast("sett14_B12.tiff")
 
-
-#---------- Calcolo NBR pre-incendio (27 APRILE) ----------
-# Richiamo la funzione con "nbr" e gli assegno 2 valori
-NBR_apr <- nbr(apr27_b8, apr27_b12) 
-
-# Plotto NBR_apr
-# I colori più scuri identificheranno le aree bruciate
-plot_NBR_apr <- plot(NBR_apr, col=magma(100), main="NBR 14 Settembre") 
-
-# --------- Calcolo NBR post-incendio (14 SETTEMBRE) ------------
-# Richiamo la funzione con "nbr" e gli assegno 2 valori
-NBR_sett <- nbr(sett14_b8, sett14_b12)
-
-# Plotta NBR_sett
-# I colori più scuri identificheranno le aree bruciate
-plot_NBR_sett <- plot(NBR_sett, col=magma(100), main="NBR 14 Settembre") 
-
-# PLOTTO DATI INSIEME X CONFRONTO
-par(mfrow=c(2,3))
-plot_NBR_sett <- plot(NBR, col=magma(100), main="NBR 14 Settembre")
-plot_NBR_apr <- plot(NBR_apr, col=magma(100), main="NBR 27 Aprile")
-
-
-
-
-
-
-
-
-
-
-
-
+#------------------------------------ CALCOLO NBR -------------------------
 
 #---------- Calcolo NBR pre-incendio (27 APRILE) ----------
 # Richiamo la funzione con "nbr" e gli assegno 2 valori
@@ -179,7 +148,7 @@ NBR_apr <- nbr(apr27_b8, apr27_b12)
 plot_NBR_apr <- plot(NBR_apr, col=magma(100), main="NBR 27 APRILE") 
 # I colori più scuri identificheranno le aree di terreno esposte/ non vegetate
 
-# Definisco soglia che valuti solo le aree di "suolo scoperto" ####### yeeeee!!!!!!
+# Definisco soglia che valuti solo le aree di "suolo scoperto" (ESPOSTO + BRUCIATO)
 soglia_apr <- 0.20
 
 # Applico soglia al mio plot
@@ -195,7 +164,7 @@ NBR_sett <- nbr(sett14_b8, sett14_b12)
 # Plotta NBR_sett
 plot_NBR_sett <- plot(NBR_sett, col=magma(100), main="NBR 14 Settembre") # i colori più scuri identificheranno le aree bruciate
 
-# Definisco soglia che valuti solo le aree di "suolo scoperto/bruciato" ####### yeeeee!!!!!!
+# Definisco soglia che valuti solo le aree di "suolo scoperto/bruciato" 
 soglia_sett <- 0.20
 
 # Applico soglia al mio plot
@@ -219,7 +188,7 @@ writeRaster(plot_NBR_sett_depurato, "plot_NBR_sett_depurato.TIFF", overwrite=TRU
 april_nbr <-rast("plot_NBR_apr_depurato.TIFF")
 sett_nbr <- rast("plot_NBR_sett_depurato.TIFF")
 
-# RICAMPIONO IL RASTER PER EFFFETTUARE OPERAZIONI DI CONFRONTO
+# RICAMPIONO IL RASTER PER EFFFETTUARE OPERAZIONE DI SOTTRAZIONE
 # Uso funzione "resample" per interpolare il raster da mascherare su un nuovo sistema di griglia, in modo che i 2 raster abbiano la stessa estensione e risoluzione
 
 # Svolgo quest'operazione sul raster del 14 settembre 
@@ -233,11 +202,109 @@ plot(diff)
 
 # Le aree con valori positivi sono le aree che sono state bruciate dall'incendio.
 # Si nota comunque anche nel settore SW un'area che a settembre risulta più esposta.
-# Questa variazione è stata probabilmente devouta alla normale variazione della copertura vegetativa durante il tempo.
+# Questa variazione è stata probabilmente dovuta alla normale variazione della copertura vegetativa durante il tempo.
 
+#########################################################################
+# CALCOLO GRAFICI
 
+# ------- APRILE: RAPPORTO SUOLO/VEGETAZIONE -----------
 
+# 1) Calcolo frequenza delle classi
+freq_april_nbr <- freq(april_nbr)
+freq_april_nbr
 
+# 2) Calcolo numero celle totali nel raster
+tot_celle_apr <- ncell(april_nbr)
 
+# 3) Cacolo le proporzioni per le varie celle
+prop_celle_apr <- freq_april_nbr/tot_celle_apr
+print(prop_celle_apr)
+
+# 4) Calcolo percentuali suolo/vegetazione
+percent_apr <- prop_celle_apr*100
+percent_apr
+
+# Tabella risutante
+# layer               value       count
+# 0.0001452289   0.0000000000   97.733557
+# 0.0001452289   0.0001452289  2.266443
+
+# Vegetazione/mare: 97.7% --> In questo valore è ovvuamente compresa an he l'area occuapta dal mare
+# Suolo esposto: 2.26%
+
+# ------- SETTEMBRE: RAPPORTO SUOLO + AREA BRUCIATA /VEGETAZIONE + MARE -----------
+# Ripeto tutto quello già fatto anche per Settembre
+
+# 1) Calcolo frequenza delle classi
+freq_sett_nbr_crop <- freq(sett_nbr_crop)
+freq_sett_nbr_crop
+
+# 2) Calcolo numero celle totali nel raster
+tot_celle_sett <- ncell(sett_nbr_crop)
+
+# 3) Cacolo le proporzioni per le varie celle
+prop_celle_sett <- freq_sett_nbr_crop/tot_celle_sett
+prop_celle_sett
+
+# 4) Calcolo percentuali suolo/vegetazione
+percent_sett <- prop_celle_sett*100
+percent_sett
+
+# Tabella risultante
+# layer               value       count
+# 0.0001452289   0.0000000000     95.789232
+# 0.0001452289   0.0001452289     3.566968
+
+# Vegetazione/mare: 95.7% --> In questo valore è ovvuamente compresa an he l'area occuapta dal mare
+# Suolo esposto: 3.5%
+
+# ---------------- COSTRUISCO DEI GRAFICI --------------------
+# Ora che ho tutti i valori, posso costruire un dataframe (tabella) con le 2 classi e i rispettivi valori ------------
+Classi <- c("Vegetazione + mare ", "Suolo esposto") # Creo vettore di testo usando le virgolette
+p_pre_fire <- c(97.7, 2.26) # Creo vettore percentuali di Aprile
+p_post_fire <- c(95.7, 3.56) # Creo vettore percentuali di Settembre
+
+# COSTRUISCO LA TABELLA SU CUI SI BASERANNO I GRAFICI
+# Per costruire una tabella uso la funzione "data.frame()"
+# Nel nostro caso, il dataframe deve avere 3 colonne: "class", "p_pre_fire", "p_post_fire" 
+tabout <- data.frame(Classi, p_pre_fire, p_post_fire)
+tabout # Mi mostrerà la tabella
+
+# COSTRUISCO I GRAFICI
+# Usiamo la libreria "ggplot2()" per creare un GRAFICO A BARRE.
+
+# La funzione "aes()" specifica le caratteristiche visive del grafico: 
+# x= class ---> collega la variabile “class” all’asse x.
+# y= p_pre_fire ---> specifica la variabile sull'asse Y 
+# color=class ---> impostiamo il colore delle barre in base alla variabile "class" e assegna un colore diverso a ogni categoria
+
+# geom_bar(stat="identity") --> stat="identity" indica che le altezze delle barre sono specificate direttamente dai dati;
+# geom_bar(fill="white"): indica il colore di riempimento delle barre, impostato su bianco
+
+ggplot(tabout, aes(x=Classi, y=p_pre_fire, color=Classi)) + geom_bar(stat="identity", fill="white")
+ggplot(tabout, aes(x=Classi, y=p_post_fire, color=Classi)) + geom_bar(stat="identity", fill="white")
+
+#---------------- Patchwork------------------
+# Combinando i due grafici (p1 e p2) sovrapponendoli. 
+p1 <- ggplot(tabout, aes(x=Classi, y=p_pre_fire, color=Classi)) + geom_bar(stat="identity", fill="white") # Creo grafico usando i dati di Aprile
+p2 <- ggplot(tabout, aes(x=Classi, y=p_post_fire, color=Classi)) + geom_bar(stat="identity", fill="white") # Creo grafico usando i dati di Settembre
+p1 + p2
+
+# MIGLIORO I GRAFICI PER RENDERLI PIù LEGGIBILI
+# Rinomino a parte le etichette dell'asse Y
+Aprile <- p_pre_fire
+Settembre <- p_post_fire
+
+# APRILE
+P1 <- ggplot(tabout, aes(x=Classi, y=Aprile, color=Classi)) + geom_bar(stat="identity", fill="white")
+
+# SETTEMBRE
+P2 <- ggplot(tabout, aes(x=Classi, y=Settembre , color=Classi)) + geom_bar(stat="identity", fill="white")
+
+# Grafico finale
+plot(P1 + P2)
+title("CONFRONTO TRA APRILE/SETTEMBRE")
+
+################################################## The end ########################################################
 
 
