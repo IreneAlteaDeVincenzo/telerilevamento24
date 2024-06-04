@@ -1,0 +1,151 @@
+# Progetto Irene Altea De Vincenzo
+# 2024
+
+# -------------------- INSTALLO PACCHETTI UTILI --------------------
+# install.packages("ggplot2") # Libreria per la creazione di grafici statistici.
+# install.packages("raster") # Libreria per lavorare con dati raster, come immagini satellitari o mappe.
+# install.packages("viridis") # Libreria per la creazione di mappe di colore (colormap) vicibili anche ai daltonici
+# install.packages("patchwork") # Libreria per la composizione di più grafici creati con ggplot 2 in un’unica visualizzazione
+# install.packages("ncdf4") # Pacchetto per importare dati da Copernicus
+
+# -------------------- AVVIO LE LIBRERIE CHE MI SERVIRANNO -------------------- 
+library(terra)
+library(ggplot2)
+library(imageRy)
+library(raster)
+library(sp)
+library(patchwork)
+library(viridis)
+library(fpc)
+
+#--------------------  IMPOSTO WORKING DIRECTORY -------------------- 
+# La funzione "setwd()" serve ad impostare la working directory
+# La funzione "getwd()" serve a richiamarla per poterci assicurare sia stata impsotata correttamente
+setwd("C:/Users/irene/Downloads/Tele-project/sentinel/") 
+getwd() 
+
+# ------------------ IMPORTO DATI ----------------------
+# Prima di tutto, importo 2 immagini in "false color" (falso colore), basate sulle bande B8, B4, B3.
+# Questa visualizzazione permette di visualizzare la copertura vegetale (in rosso) e distinguerla dal terreno esposto e l'area urbanizzata (grigio)
+
+pre_fire <- rast("april27_stromb.jpg")
+post_fire <- rast("sept14_strom1.jpg")
+
+# ---------------- PLOT DATI (FALSI COLORI) -----------------------
+conf_pre_post_fire <- par(mfrow=c(1,2))
+plot(pre_fire, main="4_Aprile")
+plot(post_fire, main="14_Settembre")
+
+# ------------------------------- INDICE AREA BRUCIATA (BAI) ---------------------------
+# Il BAI si basa sulla sottrazione delle bande 8 tra due immagini temporali per visualizzare un’area bruciata. 
+# Questo metodo si basa sulla differenza di riflettanza tra le immagini pre e post-incendio. 
+# Le aree non bruciate dovrebbero mostrare poca o nessuna differenza, mentre le aree bruciate mostreranno una differenza significativa a causa della perdita di vegetazione.
+
+___________________________________________________________
+# Calcolo la differenza tra la banda 8 dei due raster
+band8_diff = post_fire[[1]] - pre_fire[[1]]
+plot(band8_diff)
+
+# Il plot risultante avrà dei valori negativi e positivi.
+# Le aree bruciate corrispondono alle aree caratterizzate da valori negativi. Però, come si può notare, nel plot sono più estese che della realtà
+# È importante andare a "depurare" i miei dati, introducendo una "soglia" che mi aiuti a evidenziare unicamente le aree realmente bruciate.
+
+___________________________________________________________
+# Soglia per identificare le aree bruciate
+# Questo valore può variare in base al contesto. Nel mio caso l'ho impostato "ad occhio" dal plot
+soglia <- -50 
+
+# Identifico come "area bruciata" unicamente le aree al di sotto nel valore soglia 
+burned_areas <- band8_diff < soglia
+
+# Visualizzo il nuovo plot "depurato" 
+area_bruc <- plot(burned_areas, main="Aree Bruciate")
+
+# Salvo il risultato in un nuovo file raster
+writeRaster(burned_areas, "area_bruc.tif", overwrite=TRUE)
+
+risultato <- rast("area_bruc.tif")
+
+# ------------ Visualizzo informazioni sul mio raster ------------
+risultato  
+
+# Tabella raster visualizzata
+# class       : SpatRaster 
+# dimensions  : 664, 1037, 1  (nrow, ncol, nlyr)
+# resolution  : 1, 1  (x, y)
+# extent      : 0, 1037, 0, 664  (xmin, xmax, ymin, ymax)
+# coord. ref. :  
+# source      : area_bruc.tif 
+# name        : sept14_strom1_1 
+# min value   :               0 
+# max value   :               1 
+
+# ----------------------------------- ESTENSIONE AREA BRUCIATA -------------------------------------
+# Utilizzando la funzione "freq()" otteniamo una tabella che mostra quante volte quante volte ciascuna CLASSE(1 o 2) appare nei dati.
+freq_classi <- freq(risultato)
+
+freq_classi
+
+# Tabella frequenza visualizzata
+# layer value  count
+#   1     0    681501
+#   1     1     7067
+
+# Utilizzando la funzione "ncell()" posso calcolare ilnumero totale di celle 
+tot_celle <- ncell(risultato)
+
+tot_celle
+
+# ---------Proporzioni---------
+# Qui stiamo calcolando le proporzioni per ciascuna CLASSE. 
+# Dividiamo il numero di celle in qui è stata rilevata una CLASSE / il totale delle osservazioni. Questo ci dà la proporzione di ciascuna CLASSE rispetto al totale.
+prop_area_bruciata = freq_classi / tot_celle
+
+
+
+
+#-------------------------CALCOLA AREA ----------------------------------
+
+# Crea un raster binario con valore 1 per le celle con valore 1 e 0 per le altre
+# Questo tipo di operazione è spesso utilizzato per creare una maschera binaria.
+# Creo una variabile binary_raster che contiene un vettore di valori . Sostanzialmente, il vettore iniziale viene confrontato con il valore 1 (operatore uguaglianza ==). 
+# Se nell'elemento il risultato è uguale a 1, l’elemento corrispondente in binary_raster sarà TRUE (altrimenti sarà FALSE).
+
+
+# L'area di ciascuna cella (risoluzione del raster = 1 metro)
+# L'area bruciata tot sarà pari a --> 7067*(1m)^2= 7067m^2
+cell_area <- area(binary_raster)
+
+print(cell_area)
+
+# Somma l'area di tutte le celle con valore 1
+area_valore_1 <- sum(cell_area[!is.na(cell_area)])
+
+# Calcola l'area totale in metri quadrati
+area_totale_metri_quadrati <- area_valore_1 * ncell(binary_raster)
+
+
+
+
+
+
+
+# Calcola la dimensione delle celle (risoluzione del raster = 1 metro)
+cell_size <- cellSize(binary_raster)
+
+# Calcola l'area di ciascuna cella
+cell_area <- cell_size * cell_size
+
+# Somma l'area di tutte le celle con valore 1
+area_valore_1 <- sum(cell_area[!is.na(cell_area)])
+
+# Calcola l'area totale in metri quadrati
+area_totale_metri_quadrati <- area_valore_1 * ncell(binary_raster)
+
+
+
+
+
+
+
+
