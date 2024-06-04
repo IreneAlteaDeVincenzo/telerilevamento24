@@ -41,7 +41,7 @@ plot(post_fire, main="14_Settembre")
 # Questo metodo si basa sulla differenza di riflettanza tra le immagini pre e post-incendio. 
 # Le aree non bruciate dovrebbero mostrare poca o nessuna differenza, mentre le aree bruciate mostreranno una differenza significativa a causa della perdita di vegetazione.
 
-___________________________________________________________
+
 # Calcolo la differenza tra la banda 8 dei due raster
 band8_diff = post_fire[[1]] - pre_fire[[1]]
 plot(band8_diff)
@@ -50,7 +50,6 @@ plot(band8_diff)
 # Le aree bruciate corrispondono alle aree caratterizzate da valori negativi. Però, come si può notare, nel plot sono più estese che della realtà
 # È importante andare a "depurare" i miei dati, introducendo una "soglia" che mi aiuti a evidenziare unicamente le aree realmente bruciate.
 
-___________________________________________________________
 # Soglia per identificare le aree bruciate
 # Questo valore può variare in base al contesto. Nel mio caso l'ho impostato "ad occhio" dal plot
 soglia <- -50 
@@ -80,49 +79,85 @@ risultato
 # min value   :               0 
 # max value   :               1 
 
-# ----------------------------------- ESTENSIONE AREA BRUCIATA -------------------------------------
+# ----------------------------------- CALCOLO ESTENSIONE AREA BRUCIATA -------------------------------------
 # Utilizzando la funzione "freq()" otteniamo una tabella che mostra quante volte quante volte ciascuna CLASSE(1 o 2) appare nei dati.
 freq_classi <- freq(risultato)
 
-freq_classi
+# Visualizzo tabella frequenza delle classi
+freq_classi 
 
 # Tabella frequenza visualizzata
 # layer value  count
 #   1     0    681501
 #   1     1     7067
 
-# Utilizzando la funzione "ncell()" posso calcolare ilnumero totale di celle 
-tot_celle <- ncell(risultato)
-
-tot_celle
-
-# ---------Proporzioni---------
-# Qui stiamo calcolando le proporzioni per ciascuna CLASSE. 
-# Dividiamo il numero di celle in qui è stata rilevata una CLASSE / il totale delle osservazioni. Questo ci dà la proporzione di ciascuna CLASSE rispetto al totale.
-prop_area_bruciata = freq_classi / tot_celle
-
-
-
-
-#-------------------------CALCOLA AREA ----------------------------------
-
-# Crea un raster binario con valore 1 per le celle con valore 1 e 0 per le altre
-# Questo tipo di operazione è spesso utilizzato per creare una maschera binaria.
-# Creo una variabile binary_raster che contiene un vettore di valori . Sostanzialmente, il vettore iniziale viene confrontato con il valore 1 (operatore uguaglianza ==). 
-# Se nell'elemento il risultato è uguale a 1, l’elemento corrispondente in binary_raster sarà TRUE (altrimenti sarà FALSE).
-
-
-# L'area di ciascuna cella (risoluzione del raster = 1 metro)
+# CALCOLO AREA
+# L'area di ciascuna cella: risoluzione del raster = 1 metro.
 # L'area bruciata tot sarà pari a --> 7067*(1m)^2= 7067m^2
-cell_area <- area(binary_raster)
 
-print(cell_area)
+area_tot_bruciata <- 7067 * (1)^2 
+area_tot_bruciata
 
-# Somma l'area di tutte le celle con valore 1
-area_valore_1 <- sum(cell_area[!is.na(cell_area)])
+###################################################################################################################
+# CALCOLO INDICE NORMALIZZATO DI BRUCIATURA (NBR)
+# NBR= (NIR-SWIR)/(NIR+ SWIR)
+# Un valore elevato di NBR indica vegetazione sana.
+# Un valore basso indica terreno nudo o aree recentemente bruciate
 
-# Calcola l'area totale in metri quadrati
-area_totale_metri_quadrati <- area_valore_1 * ncell(binary_raster)
+# Costruisco funzione che calcoli indice NBR e dfinisco i nomi delle due variabili della mia funzione
+nbr <-function(nir, swir) {
+  nbr_output <- ((nir-swir)/(nir+swir)) # scrivo la mia funzione
+  return(nbr_output) # "Return" mi ha l'output di uscita della mia funzione
+}
+
+# Per poter calcolare l'NBR ho bisogno delle bande NIR E SWIR:
+
+# BANDE
+# b2= BLU
+# b3= VERDE
+# b4= ROSSO
+# b8= NIR
+# b12= SWIR
+
+# ------------------ IMPORTO DATI ----------------------
+# Imposto working directory
+setwd("C:/Users/irene/Downloads/Tele-project/sentinel/")
+getwd()
+
+# Guardo nome dati che voglio importare dalla mia lista
+list_4may <- list.files(path = "C:/Users/irene/Downloads/Tele-project/sentinel", full.names = FALSE)
+print(list_4may)
+
+# 27 APRILE BANDE
+apr27_b8 <- rast("27apr_B8.tiff")
+apr27_b12 <- rast("27apr_B12.tiff")
+
+
+# 14 SETTEMBRE BANDE
+sett14_b8 <- rast("sett14_B8.tiff")
+sett14_b12 <- rast("sett14_B12.tiff")
+
+
+#---------- Calcolo NBR pre-incendio (27 APRILE) ----------
+# Richiamo la funzione con "nbr" e gli assegno 2 valori
+NBR_apr <- nbr(apr27_b8, apr27_b12) 
+
+# Plotto NBR_apr
+# I colori più scuri identificheranno le aree bruciate
+plot_NBR_apr <- plot(NBR_apr, col=magma(100), main="NBR 14 Settembre") 
+
+# --------- Calcolo NBR post-incendio (14 SETTEMBRE) ------------
+# Richiamo la funzione con "nbr" e gli assegno 2 valori
+NBR_sett <- nbr(sett14_b8, sett14_b12)
+
+# Plotta NBR_sett
+# I colori più scuri identificheranno le aree bruciate
+plot_NBR_sett <- plot(NBR_sett, col=magma(100), main="NBR 14 Settembre") 
+
+# PLOTTO DATI INSIEME X CONFRONTO
+par(mfrow=c(2,3))
+plot_NBR_sett <- plot(NBR, col=magma(100), main="NBR 14 Settembre")
+plot_NBR_apr <- plot(NBR_apr, col=magma(100), main="NBR 27 Aprile")
 
 
 
@@ -130,18 +165,75 @@ area_totale_metri_quadrati <- area_valore_1 * ncell(binary_raster)
 
 
 
-# Calcola la dimensione delle celle (risoluzione del raster = 1 metro)
-cell_size <- cellSize(binary_raster)
 
-# Calcola l'area di ciascuna cella
-cell_area <- cell_size * cell_size
 
-# Somma l'area di tutte le celle con valore 1
-area_valore_1 <- sum(cell_area[!is.na(cell_area)])
 
-# Calcola l'area totale in metri quadrati
-area_totale_metri_quadrati <- area_valore_1 * ncell(binary_raster)
 
+
+
+#---------- Calcolo NBR pre-incendio (27 APRILE) ----------
+# Richiamo la funzione con "nbr" e gli assegno 2 valori
+NBR_apr <- nbr(apr27_b8, apr27_b12) 
+
+# Plotto NBR_apr
+plot_NBR_apr <- plot(NBR_apr, col=magma(100), main="NBR 27 APRILE") 
+# I colori più scuri identificheranno le aree di terreno esposte/ non vegetate
+
+# Definisco soglia che valuti solo le aree di "suolo scoperto" ####### yeeeee!!!!!!
+soglia_apr <- 0.20
+
+# Applico soglia al mio plot
+plot_NBR_apr_depurato <- NBR_apr < soglia_apr
+
+# Nuovo plot
+plot(plot_NBR_apr_depurato)
+
+# --------- Calcolo NBR post-incendio (14 SETTEMBRE) --------------
+# Richiamo la funzione con "nbr" e gli assegno 2 valori
+NBR_sett <- nbr(sett14_b8, sett14_b12)
+
+# Plotta NBR_sett
+plot_NBR_sett <- plot(NBR_sett, col=magma(100), main="NBR 14 Settembre") # i colori più scuri identificheranno le aree bruciate
+
+# Definisco soglia che valuti solo le aree di "suolo scoperto/bruciato" ####### yeeeee!!!!!!
+soglia_sett <- 0.20
+
+# Applico soglia al mio plot
+plot_NBR_sett_depurato <- NBR_sett < soglia_sett
+
+# Nuovo plot
+plot(plot_NBR_sett_depurato)
+
+#--------------- PLOTTO INSIEME I DATI PER UN CONFRONTO ---------------------
+par(mfrow=c(2,3))
+plot(plot_NBR_apr_depurato, col=viridis(2), main="NBR 27 Aprile")
+plot(plot_NBR_sett_depurato, col=viridis(2), main="NBR 14 Settembre")
+
+# ------------------------------- STUDIO LE VARIAZIONI -------------------------------
+# SALVO I 2 RASTER CREATI
+# Salvo il risultato in un nuovo file raster
+writeRaster(plot_NBR_apr_depurato, "plot_NBR_apr_depurato.TIFF", overwrite=TRUE)
+writeRaster(plot_NBR_sett_depurato, "plot_NBR_sett_depurato.TIFF", overwrite=TRUE)
+
+# Richiamo i due raster creati
+april_nbr <-rast("plot_NBR_apr_depurato.TIFF")
+sett_nbr <- rast("plot_NBR_sett_depurato.TIFF")
+
+# RICAMPIONO IL RASTER PER EFFFETTUARE OPERAZIONI DI CONFRONTO
+# Uso funzione "resample" per interpolare il raster da mascherare su un nuovo sistema di griglia, in modo che i 2 raster abbiano la stessa estensione e risoluzione
+
+# Svolgo quest'operazione sul raster del 14 settembre 
+resmask <- resample(sett_nbr, april_nbr)
+writeRaster(resmask, "resmask.TIFF", overwrite=TRUE)
+sett_nbr_crop <- rast("resmask.TIFF")
+
+# Ora posso fare la differenza tra i 2 raster
+diff <- (sett_nbr_crop - april_nbr)
+plot(diff)
+
+# Le aree con valori positivi sono le aree che sono state bruciate dall'incendio.
+# Si nota comunque anche nel settore SW un'area che a settembre risulta più esposta.
+# Questa variazione è stata probabilmente devouta alla normale variazione della copertura vegetativa durante il tempo.
 
 
 
