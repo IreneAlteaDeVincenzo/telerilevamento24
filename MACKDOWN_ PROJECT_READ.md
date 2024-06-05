@@ -1,8 +1,4 @@
 
-```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
-```
-
 # Progetto Irene Altea De Vincenzo
 ## 2024
 
