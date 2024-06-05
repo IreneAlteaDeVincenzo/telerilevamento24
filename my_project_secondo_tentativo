@@ -1,6 +1,16 @@
 # Progetto Irene Altea De Vincenzo
 # 2024
 
+# OBIETTIVO DEL PROGETTO:
+# Tra il 25-26 Aprile 2022, l'isola di Stromboli è stata interessata da un disastroso incendio che ha bruciato gran parte della vegetazione nella porzione NE dell'isola.
+# Con questo programma, si mira a analzzare la situazione pre- post-incendio, per studiare l'area bruciata. A questo proposito si andrà:
+# (1) Caricare e confrontare le immagini in "falsi colori";
+# (2) Calcolare il BAI (indice area bruciata);
+# (3) Calcolare il NBR (indice normalizzato di bruciatura;
+# (4) Elaborazione di grafici riassuntivi;
+
+# INIZIAMO!
+
 # -------------------- INSTALLO PACCHETTI UTILI --------------------
 # install.packages("ggplot2") # Libreria per la creazione di grafici statistici.
 # install.packages("raster") # Libreria per lavorare con dati raster, come immagini satellitari o mappe.
