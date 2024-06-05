@@ -75,7 +75,7 @@ soglia <- -50
 burned_areas <- band8_diff < soglia
 
 # Visualizzo il nuovo plot "depurato" 
-area_bruc <- plot(burned_areas, main="Aree Bruciate")
+area_bruc <- plot(burned_areas, main="Aree bruciate o esposte")
 
 # Salvo il risultato in un nuovo file raster
 writeRaster(burned_areas, "area_bruc.tif", overwrite=TRUE)
@@ -117,9 +117,9 @@ area_tot_bruciata
 
 dev.off() # Alleggeriamo il programma prima del prossimo passaggio, cancellando i plot
 
-#######################################################################################################################################################################
+###################################################################################################################
 # (3) CALCOLO IL NBR (INDICE NORMALIZZATO DI BRUCIATURA) 
-#######################################################################################################################################################################
+###################################################################################################################
 
 # BANDE
 # b2= BLU
@@ -183,7 +183,7 @@ soglia_apr <- 0.20
 plot_NBR_apr_depurato <- NBR_apr < soglia_apr
 
 # Nuovo plot
-plot(plot_NBR_apr_depurato)
+plot(plot_NBR_apr_depurato, main="NBR Aprile corretto")
 
 # ------- Calcolo NBR post-incendio (14 SETTEMBRE) --------
 # Richiamo la funzione con "nbr" e gli assegno 2 valori
@@ -199,7 +199,7 @@ soglia_sett <- 0.20
 plot_NBR_sett_depurato <- NBR_sett < soglia_sett
 
 # Nuovo plot
-plot(plot_NBR_sett_depurato)
+plot(plot_NBR_sett_depurato, main="NBR Settembre corretto")
 
 dev.off() # Alleggeriamo il programma prima del prossimo passaggio, cancellando i plot
 
@@ -226,9 +226,11 @@ resmask <- resample(sett_nbr, april_nbr)
 writeRaster(resmask, "resmask.TIFF", overwrite=TRUE)
 sett_nbr_crop <- rast("resmask.TIFF")
 
+dev.off()
+
 # Ora posso fare la differenza tra i 2 raster
 diff <- (sett_nbr_crop - april_nbr)
-plot(diff)
+plot(diff, col=viridis(3), main="Differenza NBR pre- post- incendio")
 
 # Le aree con valori positivi sono le aree che sono state bruciate dall'incendio o che hanno subito una riduzione della vegetazione.
 # Si nota comunque anche nel settore SW un'area che a settembre risulta più esposta.
@@ -314,28 +316,25 @@ tabout # Mi mostrerà la tabella
 # geom_bar(stat="identity") --> stat="identity" indica che le altezze delle barre sono specificate direttamente dai dati;
 # geom_bar(fill="white"): indica il colore di riempimento delle barre, impostato su bianco
 
-ggplot(tabout, aes(x=Classi, y=p_pre_fire, color=Classi)) + geom_bar(stat="identity", fill="white")
-ggplot(tabout, aes(x=Classi, y=p_post_fire, color=Classi)) + geom_bar(stat="identity", fill="white")
+dev.off()
 
-#---------------- Patchwork------------------
-# Combina i due grafici (p1 e p2) sovrapponendoli. 
-p1 <- ggplot(tabout, aes(x=Classi, y=p_pre_fire, color=Classi)) + geom_bar(stat="identity", fill="white") # Creo grafico usando i dati di Aprile
-p2 <- ggplot(tabout, aes(x=Classi, y=p_post_fire, color=Classi)) + geom_bar(stat="identity", fill="white") # Creo grafico usando i dati di Settembre
-p1 + p2
-
-# Miglioro i grafici per renderli più leggibili
 # Rinomino a parte le etichette dell'asse Y
 Aprile <- p_pre_fire
 Settembre <- p_post_fire 
-# PS) Ho trovato rapido farlo in questo modo, ma avrei potuto usare anche " + labs(x="nuova etichetta asse X", y="nuova etichetta asse Y")"
 
-# APRILE
-P1 <- ggplot(tabout, aes(x=Classi, y=Aprile, color=Classi)) + geom_bar(stat="identity", fill="white")
+# Creo grafico usando i dati di Aprile
+p1 <- ggplot(tabout, aes(x=Classi, y=Aprile, color=Classi)) + 
+        geom_bar(stat="identity", fill="white") +
+         labs(title="Pre incendio")
+p1
 
-# SETTEMBRE
-P2 <- ggplot(tabout, aes(x=Classi, y=Settembre , color=Classi)) + geom_bar(stat="identity", fill="white")
+# Creo grafico usando i dati di Settembre
+p2 <- ggplot(tabout, aes(x=Classi, y=Settembre, color=Classi)) + 
+       geom_bar(stat="identity", fill="white") +
+         labs(title="Post incendio")
+p2
 
 # Grafico finale
-plot(P1 + P2)
+plot(p1 + p2)
 
 ################################################################################ The end ##########################################################################################
