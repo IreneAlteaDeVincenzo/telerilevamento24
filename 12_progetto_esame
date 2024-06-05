@@ -110,7 +110,7 @@ freq_classi
 
 # CALCOLO AREA
 # L'area di ciascuna cella: risoluzione del raster = 1 metro.
-# L'area bruciata tot sarà pari a --> 8092*(1m)^2= 7067m^2
+# L'area bruciata tot sarà pari a --> 8553*(1m)^2= 8553m^2
 
 area_tot_bruciata <- 8553 * (1)^2 
 area_tot_bruciata
