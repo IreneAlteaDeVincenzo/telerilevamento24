@@ -1,0 +1,341 @@
+# Progetto Irene Altea De Vincenzo
+# 2024
+
+# OBIETTIVO DEL PROGETTO:
+# Tra il 25-26 Aprile 2022, l'isola di Stromboli è stata interessata da un disastroso incendio che ha bruciato gran parte della vegetazione nella porzione NE dell'isola.
+# Con questo programma, miriamo ad analizzare la situazione pre- e post-incendio per studiare l'area bruciata. A tal fine, eseguiremo le seguenti operazioni:
+# (1) Caricare e confrontare le immagini in "falsi colori";
+# (2) Calcolare il BAI (indice di area bruciata);
+# (3) Calcolare il NBR (indice normalizzato di bruciatura);
+# (4) Creare grafici riassuntivi.
+
+# INIZIAMO!
+########################################################################################################################################################################
+# (1) CARICARE E CONFRONTARE IMMAGINI IN FALSI COLORI
+########################################################################################################################################################################
+
+# -------------------- INSTALLAZIONE DEI PACCHETTI NECESSARI --------------------
+# install.packages("ggplot2") # Libreria per la creazione di grafici statistici.
+# install.packages("raster") # Libreria per lavorare con dati raster, come immagini satellitari o mappe.
+# install.packages("viridis") # Libreria per la creazione di mappe di colore (colormap) visibili anche ai daltonici.
+# install.packages("patchwork") # Libreria per la composizione di più grafici creati con ggplot2 in un’unica visualizzazione.
+# install.packages("ncdf4") # Pacchetto per importare dati da Copernicus.
+
+# -------------------- CARICAMENTO DELLE LIBRERIE NECESSARIE -------------------- 
+library(terra)  # Per lavorare con dati raster e vettoriali.
+library(ggplot2)  # Creazione di grafici statistici.
+library(imageRy)  # Gestione delle immagini.
+library(raster)  # Lavoro con dati raster, come immagini satellitari o mappe.
+library(patchwork)  # Composizione di più grafici creati con ggplot2 in un’unica visualizzazione.
+library(viridis)  # Creazione di mappe di colore visibili anche ai daltonici.
+
+# ------------------------- IMPOSTO LA WORKING DIRECTORY -------------------------
+# La funzione "setwd()" serve ad impostare la working directory.
+# La funzione "getwd()" serve a richiamarla per assicurarci che sia stata impostata correttamente.
+setwd("C:/Users/irene/Downloads/Tele-project/sentinel/") 
+getwd() 
+
+# ----------------------------- IMPORTO I DATI ----------------------------------- 
+# Prima di tutto, importo 2 immagini in "false color" (falso colore), basate sulle bande B8, B4, B3.
+# Questa visualizzazione permette di visualizzare la copertura vegetale (in rosso) e distinguerla dal terreno esposto e l'area urbanizzata (grigio).
+
+pre_fire <- rast("pre_fire_27apr.jpg")
+post_fire <- rast("post_fire_14sett.jpg")
+
+# ------------------------- PLOT DEI DATI (FALSI COLORI) -------------------------
+# Creo un layout a due colonne per visualizzare le immagini pre e post-incendio.
+conf_pre_post_fire <- par(mfrow=c(1,2))
+plot(pre_fire, main="4 Aprile")
+plot(post_fire, main="14 Settembre")
+
+dev.off() # Alleggeriamo il programma prima del prossimo passaggio, cancellando i plot
+
+########################################################################################################################################################################
+# (2) CALCOLARE IL BAI (INDICE AREA BRUCIATA)
+########################################################################################################################################################################
+
+# ------------------------------- INDICE AREA BRUCIATA (BAI) ---------------------------
+# Il BAI si basa sulla sottrazione delle bande 8 tra due immagini temporali per visualizzare un’area bruciata. 
+# Questo metodo si basa sulla differenza di riflettanza tra le immagini pre e post-incendio. 
+# Le aree non bruciate dovrebbero mostrare poca o nessuna differenza, mentre le aree bruciate mostreranno una differenza significativa a causa della perdita di vegetazione.
+
+# Calcolo la differenza tra la banda 8 dei due raster
+band8_diff = post_fire[[1]] - pre_fire[[1]]
+plot(band8_diff, col=viridis(100), main="Differenza pre- post- incendio")
+
+# Il plot risultante avrà dei valori negativi e positivi.
+# Le aree bruciate corrispondono alle aree caratterizzate da valori negativi. Però, come si può notare, nel plot sono più estese che della realtà
+# È importante andare a "depurare" i miei dati, introducendo una "soglia" che mi aiuti a evidenziare unicamente le aree realmente bruciate.
+
+# Soglia per identificare le aree bruciate
+# Questo valore può variare in base al contesto. Nel mio caso l'ho impostato "ad occhio" dal plot
+soglia <- -50 
+
+# Identifico come "area bruciata" unicamente le aree al di sotto nel valore soglia 
+burned_areas <- band8_diff < soglia
+
+# Visualizzo il nuovo plot "depurato" 
+area_bruc <- plot(burned_areas, main="Aree Bruciate")
+
+# Salvo il risultato in un nuovo file raster
+writeRaster(burned_areas, "area_bruc.tif", overwrite=TRUE)
+
+risultato <- rast("area_bruc.tif")
+
+# ------------ Visualizzo informazioni sul mio raster ------------
+risultato  
+
+# Tabella raster visualizzata
+# class       : SpatRaster 
+# dimensions  : 664, 1037, 1  (nrow, ncol, nlyr)
+# resolution  : 1, 1  (x, y)
+# extent      : 0, 1037, 0, 664  (xmin, xmax, ymin, ymax)
+# coord. ref. :  
+# source      : area_bruc.tif 
+# name        : sept14_strom1_1 
+# min value   :               0 
+# max value   :               1 
+
+# ----------------------------------- CALCOLO ESTENSIONE AREA BRUCIATA -------------------------------------
+# Utilizzando la funzione "freq()" otteniamo una tabella che mostra quante volte quante volte ciascuna CLASSE(1 o 2) appare nei dati.
+freq_classi <- freq(risultato)
+
+# Visualizzo tabella frequenza delle classi
+freq_classi 
+
+# Tabella frequenza visualizzata
+# layer value  count
+#   1     0    163755
+#   1     1     8553
+
+# CALCOLO AREA
+# L'area di ciascuna cella: risoluzione del raster = 1 metro.
+# L'area bruciata tot sarà pari a --> 8092*(1m)^2= 7067m^2
+
+area_tot_bruciata <- 8553 * (1)^2 
+area_tot_bruciata
+
+dev.off() # Alleggeriamo il programma prima del prossimo passaggio, cancellando i plot
+
+#######################################################################################################################################################################
+# (3) CALCOLO IL NBR (INDICE NORMALIZZATO DI BRUCIATURA) 
+#######################################################################################################################################################################
+
+# BANDE
+# b2= BLU
+# b3= VERDE
+# b4= ROSSO
+# b8= NIR
+# b12= SWIR
+
+# Per poter calcolare l'NBR ho bisogno delle bande NIR E SWIR:
+
+# ---------------  INDICE NORMALIZZATO DI BRUCIATURA (NBR) --------------- 
+# NBR = (NIR - SWIR) / (NIR + SWIR)
+# Un valore elevato di NBR indica vegetazione sana.
+# Un valore basso indica terreno nudo o aree recentemente bruciate.
+
+# Costruisco funzione che calcoli indice NBR e dfinisco i nomi delle due variabili della mia funzione
+nbr <-function(nir, swir) {
+  nbr_output <- ((nir-swir)/(nir+swir)) # scrivo la mia funzione
+  return(nbr_output) # "Return" mi ha l'output di uscita della mia funzione
+}
+
+# ----------------------------- IMPORTO I DATI ----------------------------------- 
+# Imposto working directory
+setwd("C:/Users/irene/Downloads/Tele-project/sentinel/")
+getwd()
+
+# ----------------- CREO E VISUALIZZO LA LISTA DI DATI DA IMPORTARE---------------
+list_project <- list.files(path = "C:/Users/irene/Downloads/Tele-project/sentinel", full.names = FALSE)
+print(list_project)
+
+# Tabella visualizzata
+# [1] "27apr_B12.tiff"              "27apr_B2.tiff"               "27apr_B3.tiff"              
+# [4] "27apr_B4.tiff"               "27apr_B8.tiff"               "april27_stromb.jpg"         
+# [7] "area_bruc.tif"               "plot_NBR_apr_depurato.TIFF"  "plot_NBR_sett_depurato.TIFF"
+# [10] "resmask.TIFF"               "sept14_strom1.jpg"           "sett14_B12.tiff"            
+# [13] "sett14_B2.tiff"             "sett14_B3.tiff"              "sett14_B4.tiff"             
+# [16] "sett14_B8.tiff"
+
+# 27 APRILE BANDE
+apr27_b8 <- rast("27apr_B8.tiff")
+apr27_b12 <- rast("27apr_B12.tiff")
+
+# 14 SETTEMBRE BANDE
+sett14_b8 <- rast("sett14_B8.tiff")
+sett14_b12 <- rast("sett14_B12.tiff")
+
+#----------------------------- CALCOLO NBR -------------------------------------
+
+#---------- Calcolo NBR pre-incendio (27 APRILE) ----------
+# Richiamo la funzione con "nbr" e gli assegno 2 valori
+NBR_apr <- nbr(apr27_b8, apr27_b12) 
+
+# Plotto NBR_apr
+plot_NBR_apr <- plot(NBR_apr, col=magma(100), main="NBR 27 APRILE") 
+# I colori più scuri identificheranno le aree di terreno esposte/ non vegetate
+
+# Definisco soglia che valuti solo le aree di "suolo scoperto" (ESPOSTO + BRUCIATO)
+soglia_apr <- 0.20
+
+# Applico soglia al mio plot
+plot_NBR_apr_depurato <- NBR_apr < soglia_apr
+
+# Nuovo plot
+plot(plot_NBR_apr_depurato)
+
+# ------- Calcolo NBR post-incendio (14 SETTEMBRE) --------
+# Richiamo la funzione con "nbr" e gli assegno 2 valori
+NBR_sett <- nbr(sett14_b8, sett14_b12)
+
+# Plotta NBR_sett
+plot_NBR_sett <- plot(NBR_sett, col=magma(100), main="NBR 14 Settembre") # i colori più scuri identificheranno le aree bruciate
+
+# Definisco soglia che valuti solo le aree di "suolo scoperto/bruciato" 
+soglia_sett <- 0.20
+
+# Applico soglia al mio plot
+plot_NBR_sett_depurato <- NBR_sett < soglia_sett
+
+# Nuovo plot
+plot(plot_NBR_sett_depurato)
+
+dev.off() # Alleggeriamo il programma prima del prossimo passaggio, cancellando i plot
+
+# --------------------PLOTTO INSIEME I DATI PER UN CONFRONTO --------------------------
+par(mfrow=c(2,3))
+plot(plot_NBR_apr_depurato, col=viridis(2), main="NBR 27 Aprile")
+plot(plot_NBR_sett_depurato, col=viridis(2), main="NBR 14 Settembre")
+
+# ------------------------------- STUDIO LE VARIAZIONI -------------------------------
+# SALVO I 2 RASTER CREATI
+# Salvo il risultato in un nuovo file raster
+writeRaster(plot_NBR_apr_depurato, "plot_NBR_apr_depurato.TIFF", overwrite=TRUE)
+writeRaster(plot_NBR_sett_depurato, "plot_NBR_sett_depurato.TIFF", overwrite=TRUE)
+
+# Richiamo i due raster creati
+april_nbr <-rast("plot_NBR_apr_depurato.TIFF")
+sett_nbr <- rast("plot_NBR_sett_depurato.TIFF")
+
+# ----- RICAMPIONO IL RASTER PER EFFFETTUARE OPERAZIONE DI SOTTRAZIONE -----
+# Uso funzione "resample" per interpolare il raster da mascherare su un nuovo sistema di griglia, in modo che i 2 raster abbiano la stessa estensione e risoluzione
+
+# Svolgo quest'operazione sul raster del 14 settembre 
+resmask <- resample(sett_nbr, april_nbr)
+writeRaster(resmask, "resmask.TIFF", overwrite=TRUE)
+sett_nbr_crop <- rast("resmask.TIFF")
+
+# Ora posso fare la differenza tra i 2 raster
+diff <- (sett_nbr_crop - april_nbr)
+plot(diff)
+
+# Le aree con valori positivi sono le aree che sono state bruciate dall'incendio o che hanno subito una riduzione della vegetazione.
+# Si nota comunque anche nel settore SW un'area che a settembre risulta più esposta.
+# Questa variazione è stata probabilmente dovuta alla normale variazione della copertura vegetativa durante il tempo.
+
+dev.off() # Alleggeriamo il programma prima del prossimo passaggio, cancellando i plot
+
+###################################################################################################################
+# (4) ELABORO GRAFICI RIASSUNTIVI
+###################################################################################################################
+
+# ----------------------- APRILE: RAPPORTO SUOLO/VEGETAZIONE -----------------------
+
+# 1) Calcolo frequenza delle classi
+freq_april_nbr <- freq(april_nbr)
+freq_april_nbr
+
+# 2) Calcolo numero celle totali nel raster
+tot_celle_apr <- ncell(april_nbr)
+
+# 3) Cacolo le proporzioni per le varie celle
+prop_celle_apr <- freq_april_nbr/tot_celle_apr
+print(prop_celle_apr)
+
+# 4) Calcolo percentuali suolo/vegetazione
+percent_apr <- prop_celle_apr*100
+percent_apr
+
+# Tabella risutante
+# layer               value       count
+# 0.0001452289   0.0000000000   90.920329
+# 0.0001452289   0.0001452289   9.079671
+
+# Vegetazione/mare: 97.9% --> In questo valore è ovvuamente compresa an he l'area occuapta dal mare
+# Suolo esposto: 9.07%
+
+# ----------------- SETTEMBRE: RAPPORTO SUOLO /VEGETAZIONE + MARE ----------------
+# Ripeto tutto quello già fatto anche per Settembre
+
+# 1) Calcolo frequenza delle classi
+freq_sett_nbr_crop <- freq(sett_nbr_crop)
+freq_sett_nbr_crop
+
+# 2) Calcolo numero celle totali nel raster
+tot_celle_sett <- ncell(sett_nbr_crop)
+
+# 3) Cacolo le proporzioni per le varie celle
+prop_celle_sett <- freq_sett_nbr_crop/tot_celle_sett
+prop_celle_sett
+
+# 4) Calcolo percentuali suolo/vegetazione
+percent_sett <- prop_celle_sett*100
+percent_sett
+
+# Tabella risultante
+# layer               value       count
+# 0.0001452289   0.0000000000     85.78244
+# 0.0001452289   0.0001452289     14.21756
+
+# Vegetazione/mare: 85.7% --> In questo valore è compresa anche l'area occupata dal mare
+# Suolo esposto: 14.2%
+
+# ----------------------------------------- COSTRUISCO I GRAFICI -------------------------------------------
+# Ora che ho tutti i valori, posso costruire un dataframe (tabella) con le 2 classi e i rispettivi valori 
+Classi <- c("Vegetazione + mare ", "Suolo esposto") # Creo vettore di testo usando le virgolette
+p_pre_fire <- c(90.9, 9.07) # Creo vettore percentuali di Aprile
+p_post_fire <- c(85.7, 14.2) # Creo vettore percentuali di Settembre
+
+# COSTRUISCO LA TABELLA SU CUI SI BASERANNO I GRAFICI
+# Per costruire una tabella uso la funzione "data.frame()"
+# Nel nostro caso, il dataframe deve avere 3 colonne: "class", "p_pre_fire", "p_post_fire" 
+tabout <- data.frame(Classi, p_pre_fire, p_post_fire)
+tabout # Mi mostrerà la tabella
+
+# COSTRUISCO I GRAFICI
+# Usiamo la libreria "ggplot2()" per creare un GRAFICO A BARRE.
+
+# La funzione "aes()" specifica le caratteristiche visive del grafico: 
+# x= class ---> collega la variabile “class” all’asse x.
+# y= p_pre_fire ---> specifica la variabile sull'asse Y 
+# color=class ---> impostiamo il colore delle barre in base alla variabile "class" e assegna un colore diverso a ogni categoria
+
+# geom_bar(stat="identity") --> stat="identity" indica che le altezze delle barre sono specificate direttamente dai dati;
+# geom_bar(fill="white"): indica il colore di riempimento delle barre, impostato su bianco
+
+ggplot(tabout, aes(x=Classi, y=p_pre_fire, color=Classi)) + geom_bar(stat="identity", fill="white")
+ggplot(tabout, aes(x=Classi, y=p_post_fire, color=Classi)) + geom_bar(stat="identity", fill="white")
+
+#---------------- Patchwork------------------
+# Combina i due grafici (p1 e p2) sovrapponendoli. 
+p1 <- ggplot(tabout, aes(x=Classi, y=p_pre_fire, color=Classi)) + geom_bar(stat="identity", fill="white") # Creo grafico usando i dati di Aprile
+p2 <- ggplot(tabout, aes(x=Classi, y=p_post_fire, color=Classi)) + geom_bar(stat="identity", fill="white") # Creo grafico usando i dati di Settembre
+p1 + p2
+
+# Miglioro i grafici per renderli più leggibili
+# Rinomino a parte le etichette dell'asse Y
+Aprile <- p_pre_fire
+Settembre <- p_post_fire 
+# PS) Ho trovato rapido farlo in questo modo, ma avrei potuto usare anche " + labs(x="nuova etichetta asse X", y="nuova etichetta asse Y")"
+
+# APRILE
+P1 <- ggplot(tabout, aes(x=Classi, y=Aprile, color=Classi)) + geom_bar(stat="identity", fill="white")
+
+# SETTEMBRE
+P2 <- ggplot(tabout, aes(x=Classi, y=Settembre , color=Classi)) + geom_bar(stat="identity", fill="white")
+
+# Grafico finale
+plot(P1 + P2)
+
+################################################################################ The end ##########################################################################################
