@@ -45,7 +45,7 @@ post_fire <- rast("post_fire_14sett.jpg")
 # ------------------------- PLOT DEI DATI (FALSI COLORI) -------------------------
 # Creo un layout a due colonne per visualizzare le immagini pre e post-incendio.
 conf_pre_post_fire <- par(mfrow=c(1,2))
-plot(pre_fire, main="4 Aprile")
+plot(pre_fire, main="27 Aprile")
 plot(post_fire, main="14 Settembre")
 
 dev.off() # Alleggeriamo il programma prima del prossimo passaggio, cancellando i plot
@@ -136,7 +136,7 @@ dev.off() # Alleggeriamo il programma prima del prossimo passaggio, cancellando 
 # Un valore basso indica terreno nudo o aree recentemente bruciate.
 
 # Costruisco funzione che calcoli indice NBR e dfinisco i nomi delle due variabili della mia funzione
-nbr <-function(nir, swir) {
+nbr <- function(nir, swir) {
   nbr_output <- ((nir-swir)/(nir+swir)) # scrivo la mia funzione
   return(nbr_output) # "Return" mi ha l'output di uscita della mia funzione
 }
@@ -190,7 +190,7 @@ plot(plot_NBR_apr_depurato, main="NBR Aprile corretto")
 NBR_sett <- nbr(sett14_b8, sett14_b12)
 
 # Plotta NBR_sett
-plot_NBR_sett <- plot(NBR_sett, col=magma(100), main="NBR 14 Settembre") # i colori più scuri identificheranno le aree bruciate
+plot_NBR_sett <- plot(NBR_sett, col=magma(100), main="NBR 14 Settembre") # I colori più scuri identificheranno le aree bruciate
 
 # Definisco soglia che valuti solo le aree di "suolo scoperto/bruciato" 
 soglia_sett <- 0.20
@@ -204,7 +204,7 @@ plot(plot_NBR_sett_depurato, main="NBR Settembre corretto")
 dev.off() # Alleggeriamo il programma prima del prossimo passaggio, cancellando i plot
 
 # --------------------PLOTTO INSIEME I DATI PER UN CONFRONTO --------------------------
-par(mfrow=c(2,3))
+par(mfrow=c(1,2))
 plot(plot_NBR_apr_depurato, col=viridis(2), main="NBR 27 Aprile")
 plot(plot_NBR_sett_depurato, col=viridis(2), main="NBR 14 Settembre")
 
@@ -259,7 +259,7 @@ print(prop_celle_apr)
 percent_apr <- prop_celle_apr*100
 percent_apr
 
-# Tabella risutante
+# Tabella risultante
 # layer               value       count
 # 0.0001452289   0.0000000000   90.920329
 # 0.0001452289   0.0001452289   9.079671
