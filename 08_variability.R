@@ -25,7 +25,7 @@ im.plotRGB(sent, r=2, g=1, b=3) # Nir su Green
 # Principio di funzionamento:
 #1. Definisci una finestra mobile: ossia, la regione dell’immagine su cui calcolerai la variabilità. La matrice(1/9, 3, 3) è una matrice 3x3; 1/9 è l'unità della matrice/ il valore costante per ogni cella 
 #2. Muovi la finestra su tutta l’immagine, calcolando la variabilità all’interno di ciascuna finestra: usa funzione "focal()", che calcola la “moving window”
-#3. Calcola  la deviazione standard dei valori dei pixel all’interno  di goni finestra usando la funzione "sd()". "fun=sd" --> indico che la funzione che voglio utilizzare è la deviazione standard
+#3. Calcola  la deviazione standard dei valori dei pixel all’interno  di ogni finestra usando la funzione "sd()". "fun=sd" --> indico che la funzione che voglio utilizzare è la deviazione standard
 
 # NB: Posso calcolare la variabilità per una singola banda: in questo esercizio uso la banda NIR
 
