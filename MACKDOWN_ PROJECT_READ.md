@@ -40,6 +40,7 @@ post_fire <- rast("post_fire_14sett.jpg")
 >**Note** 
 Per questo progetto sono state utilizzate immagini in "false color" (falso colore), basate sulle bande B8, B4, B3.
 Questa visualizzazione permette di visualizzare:
+
 + In rosso: la copertura vegetale (in rosso) 
 + In grigio: terreno esposto o un'area bruciata
 
@@ -48,7 +49,7 @@ Creiamo un layout a due colonne per visualizzare le immagini pre e post-incendio
 ```{r, eval=F}
 # Creo un multiframe con le due immagini
 conf_pre_post_fire <- par(mfrow=c(1,2))
-plot(pre_fire, main="4 Aprile")
+plot(pre_fire, main="27 Aprile")
 plot(post_fire, main="14 Settembre")
 ```
 
@@ -107,6 +108,7 @@ A= 8553*(1m)^2= 8553m^2
 
 ### CALCOLO NBR (INDICE NORMALIZZATO DI BRUCIATURA)
 Le immagini satellitari possono essere composte da diverse bande di dati. Ogni banda rappresenta una specifica gamma di lunghezze d’onda e può essere utilizzata per estrarre informazioni specifiche. Tra le bande più comuni abbiamo:
+
 + B2= BLUE
 + B3= GREEN
 + B4= RED
@@ -119,7 +121,7 @@ NBR = (NIR - SWIR) / (NIR + SWIR)
 
 #### CREO FUNZIONE PER CALCOLARE NBR
 ```{r, eval=F}
-nbr <-function(nir, swir) {
+nbr <- function(nir, swir) {
   nbr_output <- ((nir-swir)/(nir+swir)) # Scrivo la mia funzione
   return(nbr_output) # "Return" mi ha l'output di uscita della mia funzione
 }
@@ -171,14 +173,14 @@ plot(plot_NBR_apr_depurato, main="NBR Aprile corretto")
 
 ```
 
-Dopodichè, eseguendo lo stessoo procedimento, posso calcolare anche l'NBR POST - INCENDIO
+Dopodichè, eseguendo lo stesso procedimento, posso calcolare anche l'NBR POST - INCENDIO
 
 #### CONFRONTO DATI 
 Una volta ottenuti i dati, li plotto insieme per eseguire un confronto
 
 ```{r, eval=F}
 # Multiframe
-par(mfrow=c(2,3))
+par(mfrow=c(1,2))
 plot(plot_NBR_apr_depurato, col=viridis(2), main="NBR 27 Aprile")
 plot(plot_NBR_sett_depurato, col=viridis(2), main="NBR 14 Settembre")
 
@@ -216,7 +218,7 @@ plot(diff, col=viridis(3), main="Differenza NBR pre- post- incendio")
 Le aree con valori positivi sono le aree che sono state bruciate dall'incendio o che hanno subito una riduzione della vegetazione.
 
 ### GRAFICI RIASSUNTIVI
-Dai dati ottenuti, elabolo rei grafici riassuntivi.
+Dai dati ottenuti, elaboro rei grafici riassuntivi.
 Per farlo:
 
 1. Calcolo frequenza delle classi
@@ -241,7 +243,7 @@ percent_sett
 
 Una volta eseguiti questi passaggi sia per entrambi i raster, otterrò due tabelle di dati, da cui posso estrarre i valori percentuali per creare i grafici
 ```{r, eval=F}
-# Tabella risutante
+# Tabella risultante
 # layer               value       count
 # 0.0001452289   0.0000000000   90.920329
 # 0.0001452289   0.0001452289   9.079671
