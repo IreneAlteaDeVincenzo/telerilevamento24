@@ -32,7 +32,7 @@ library(viridis)  # Creazione di mappe di colore visibili anche ai daltonici.
 # ------------------------- IMPOSTO LA WORKING DIRECTORY -------------------------
 # La funzione "setwd()" serve ad impostare la working directory.
 # La funzione "getwd()" serve a richiamarla per assicurarci che sia stata impostata correttamente.
-setwd("C:/Users/irene/Downloads/Tele-project/sentinel/") 
+setwd("C:/Users/irene/Desktop/Università/tele-rilevamento/Tele-project/sentinel/") 
 getwd() 
 
 # ----------------------------- IMPORTO I DATI ----------------------------------- 
